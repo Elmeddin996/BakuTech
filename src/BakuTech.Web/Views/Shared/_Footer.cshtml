@@ -1,0 +1,550 @@
+@using System.Globalization
+@using BakuTech.Business.Abstractions.Services
+@using BakuTech.Web.Services
+
+@inject ISettingService SettingService
+@inject ICategoryService CategoryService
+@inject IBranchService BranchService
+@inject LocService localizer
+
+@{
+    var setting = await SettingService.GetAsync();
+    var categories = await CategoryService.GetAllAsync();
+    var branches = await BranchService.GetAllActiveAsync();
+
+    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var address = culture switch
+    {
+        "en" => setting?.AddressEn,
+        "ru" => setting?.AddressRu,
+        _ => setting?.AddressAz
+    };
+
+    var workingHours = culture switch
+    {
+        "en" => setting?.WorkingHoursEn,
+        "ru" => setting?.WorkingHoursRu,
+        _ => setting?.WorkingHoursAz
+    };
+
+    var footerText = culture switch
+    {
+        "en" => setting?.FooterTextEn,
+        "ru" => setting?.FooterTextRu,
+        _ => setting?.FooterTextAz
+    };
+}
+<footer class="BakuTech-footer">
+
+    <div class="container">
+
+        <!-- =========================
+             FOOTER CONTENT
+             ========================= -->
+
+        <div class="BakuTech-footer-grid">
+
+            <!-- =========================
+                 BRAND
+                 ========================= -->
+
+            <div class="BakuTech-footer-column BakuTech-footer-brand-column">
+
+                <div class="BakuTech-footer-brand">
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="BakuTech-footer-logo-link">
+
+                        @if (!string.IsNullOrWhiteSpace(setting?.Logo))
+                        {
+                            <img src="@setting.Logo"
+                                 alt="@setting.CompanyName"
+                                 class="BakuTech-footer-logo" />
+                        }
+                        else
+                        {
+                            <span class="BakuTech-footer-company-name">
+                                @(setting?.CompanyName ?? "BakuTech")
+                            </span>
+                        }
+
+                    </a>
+
+
+                    @if (!string.IsNullOrWhiteSpace(footerText))
+                    {
+                        <p class="BakuTech-footer-description">
+                            @Html.Raw(footerText)
+                        </p>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(setting?.Email))
+                    {
+                        <a href="mailto:@setting.Email"
+                           class="BakuTech-footer-brand-email">
+
+                            <i class="fas fa-envelope"></i>
+
+                            <span>
+                                @setting.Email
+                            </span>
+
+                        </a>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 CONTACT
+                 ========================= -->
+
+            <div class="BakuTech-footer-column BakuTech-footer-accordion">
+
+                <button type="button"
+                        class="BakuTech-footer-column-title BakuTech-footer-accordion-toggle">
+
+                    <span>
+                        @localizer.GetLocalizedHtmlString("ContactInformation")
+                    </span>
+
+                    <i class="fas fa-chevron-down"></i>
+
+                </button>
+
+
+                <div class="BakuTech-footer-column-content">
+
+                    @if (branches.Any())
+                    {
+                        <div class="BakuTech-footer-contact-item">
+
+                            <span class="BakuTech-footer-contact-icon">
+                                <i class="fas fa-store"></i>
+                            </span>
+
+                            <div style="width:100%;">
+
+                                <span class="BakuTech-footer-contact-label">
+                                    @localizer.GetLocalizedHtmlString("Branches")
+                                </span>
+
+                                <div class="BakuTech-footer-contact-value">
+
+                                    @foreach (var branch in branches.OrderBy(x => x.DisplayOrder).ThenBy(x => x.NameAz))
+                                    {
+                                        var branchAddress = culture switch
+                                        {
+                                            "en" => branch.AddressEn,
+                                            "ru" => branch.AddressRu,
+                                            _ => branch.AddressAz
+                                        };
+
+                                        if (!string.IsNullOrWhiteSpace(branchAddress))
+                                        {
+                                            <div style="margin-bottom:8px;">
+                                                @branchAddress
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(setting?.Phone1))
+                    {
+                        <div class="BakuTech-footer-contact-item">
+
+                            <span class="BakuTech-footer-contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+
+                            <div>
+                                <span class="BakuTech-footer-contact-label">
+                                    @localizer.GetLocalizedHtmlString("Phone")
+                                </span>
+
+                                <a href="tel:@setting.Phone1"
+                                   class="BakuTech-footer-contact-value">
+                                    @setting.Phone1
+                                </a>
+                            </div>
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(setting?.Phone2))
+                    {
+                        <div class="BakuTech-footer-contact-item">
+
+                            <span class="BakuTech-footer-contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+
+                            <div>
+                                <span class="BakuTech-footer-contact-label">
+                                    @localizer.GetLocalizedHtmlString("Phone")
+                                </span>
+
+                                <a href="tel:@setting.Phone2"
+                                   class="BakuTech-footer-contact-value">
+                                    @setting.Phone2
+                                </a>
+                            </div>
+
+                        </div>
+                    }
+
+
+                 
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 WORKING HOURS / SOCIAL
+                 ========================= -->
+
+            <div class="BakuTech-footer-column BakuTech-footer-accordion">
+
+                <button type="button"
+                        class="BakuTech-footer-column-title BakuTech-footer-accordion-toggle">
+
+                    <span>
+                        @localizer.GetLocalizedHtmlString("WorkingHours")
+                    </span>
+
+                    <i class="fas fa-chevron-down"></i>
+
+                </button>
+
+
+                <div class="BakuTech-footer-column-content">
+
+                    @if (!string.IsNullOrWhiteSpace(workingHours))
+                    {
+                        <div class="BakuTech-footer-working-hours">
+                            @Html.Raw(workingHours)
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(setting?.Facebook) ||
+                    !string.IsNullOrWhiteSpace(setting?.Instagram) ||
+                    !string.IsNullOrWhiteSpace(setting?.Youtube) ||
+                    !string.IsNullOrWhiteSpace(setting?.Telegram) ||
+                    !string.IsNullOrWhiteSpace(setting?.TikTok))
+                    {
+                        <div class="BakuTech-footer-social-title">
+                            @localizer.GetLocalizedHtmlString("SocialNetworks")
+                        </div>
+
+                        <div class="BakuTech-footer-social">
+
+                            @if (!string.IsNullOrWhiteSpace(setting?.Facebook))
+                            {
+                                <a href="@setting.Facebook"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(setting?.Instagram))
+                            {
+                                <a href="@setting.Instagram"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(setting?.Youtube))
+                            {
+                                <a href="@setting.Youtube"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="YouTube">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(setting?.Telegram))
+                            {
+                                <a href="@setting.Telegram"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="Telegram">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </a>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(setting?.TikTok))
+                            {
+                                <a href="@setting.TikTok"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   aria-label="TikTok">
+                                    <i class="fab fa-tiktok"></i>
+                                </a>
+                            }
+
+                        </div>
+                    }
+
+
+                </div>
+                <br/>
+
+                    @if (!string.IsNullOrWhiteSpace(setting?.WhatsApp))
+                    {
+                        <div class="BakuTech-footer-contact-item">
+
+                            <span class="BakuTech-footer-contact-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </span>
+
+                            <div>
+                                <span class="BakuTech-footer-contact-label">
+                                    WhatsApp
+                                </span>
+
+                                <a href="@setting.WhatsApp"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="BakuTech-footer-contact-value">
+
+                                    @localizer.GetLocalizedHtmlString("ContactViaWhatsApp")
+
+                                </a>
+                            </div>
+
+                        </div>
+                    }
+            </div>
+
+
+            <!-- =========================
+                 CATEGORIES
+                 ========================= -->
+
+            <div class="BakuTech-footer-column BakuTech-footer-accordion">
+
+                <button type="button"
+                        class="BakuTech-footer-column-title BakuTech-footer-accordion-toggle">
+
+                    <span>
+                        @localizer.GetLocalizedHtmlString("Categories")
+                    </span>
+
+                    <i class="fas fa-chevron-down"></i>
+
+                </button>
+
+
+                <div class="BakuTech-footer-column-content">
+
+                    <ul class="BakuTech-footer-links">
+
+                        @foreach (var category in categories
+                        .Where(x => x.IsActive)
+                        .Take(6))
+                        {
+                            var categoryName = culture switch
+                            {
+                                "en" => category.NameEn,
+                                "ru" => category.NameRu,
+                                _ => category.NameAz
+                            };
+
+                            var categorySlug = culture switch
+                            {
+                                "en" => category.SlugEn,
+                                "ru" => category.SlugRu,
+                                _ => category.SlugAz
+                            };
+
+                            <li>
+                                <a href="@Url.RouteUrl("category", new
+    {
+        culture = culture,
+        slug = categorySlug
+    })">
+                                    @categoryName
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             QUICK LINKS
+             ========================= -->
+
+        <div class="BakuTech-footer-quick-links">
+
+            <a asp-controller="Home"
+               asp-action="Index">
+                @localizer.GetLocalizedHtmlString("Home")
+            </a>
+
+            <a asp-controller="Search"
+               asp-action="Index">
+                @localizer.GetLocalizedHtmlString("Search")
+            </a>
+
+            
+
+            <a asp-controller="Wishlist"
+               asp-action="Index">
+                @localizer.GetLocalizedHtmlString("Wishlist")
+            </a>
+
+            <a asp-controller="Cart"
+               asp-action="Index">
+                @localizer.GetLocalizedHtmlString("Cart")
+            </a>
+
+            <a asp-controller="Contact"
+               asp-action="Index">
+                @localizer.GetLocalizedHtmlString("Contact")
+            </a>
+
+        </div>
+
+
+        <!-- =========================
+             BOTTOM
+             ========================= -->
+
+        <div class="BakuTech-footer-bottom">
+
+            <div class="BakuTech-footer-copyright">
+
+               
+
+                <span class="BakuTech-footer-separator">•</span>
+
+                <span>
+                    @(setting?.CompanyName ?? "BakuTech")
+                    © 2026
+                </span>
+
+                <span class="BakuTech-footer-separator">•</span>
+
+               @*  <span>
+                    Created by
+                    <a href="https://wa.me/994505481996"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Elmeddin Mirzeyev
+                    </a>
+                </span> *@
+                <button type="button"
+                        id="BakuTech-dev-signature"
+                        aria-label="Developer"
+                        style="
+            right: 10px;
+            bottom: 5px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            margin: 0;
+            border: 0;
+            background: transparent;
+            cursor: default;
+            z-index: 9999;
+        ">
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const button = document.getElementById("BakuTech-dev-signature");
+
+        if (!button) {
+            return;
+        }
+
+        let clicks = 0;
+        let timer;
+
+        button.addEventListener("click", function () {
+            clicks++;
+
+            clearTimeout(timer);
+
+            timer = setTimeout(function () {
+                clicks = 0;
+            }, 1500);
+
+            if (clicks === 5) {
+                clicks = 0;
+
+                window.open(
+                    "https://wa.me/994505481996",
+                    "_blank"
+                );
+            }
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const toggles =
+            document.querySelectorAll('.BakuTech-footer-accordion-toggle');
+
+        toggles.forEach(function (toggle) {
+
+            toggle.addEventListener('click', function () {
+
+                if (window.innerWidth >= 768) {
+                    return;
+                }
+
+                const column =
+                    toggle.closest('.BakuTech-footer-accordion');
+
+                if (!column) {
+                    return;
+                }
+
+                column.classList.toggle('open');
+
+            });
+
+        });
+
+    });
+</script>

@@ -1,0 +1,454 @@
+@using BakuTech.Web.Services
+@inject LocService localizer
+
+@{
+    ViewData["Title"] = localizer.GetLocalizedHtmlString("Cart");
+}
+
+<style>
+    .BakuTech-cart-page {
+        padding: 30px 0 60px;
+    }
+
+    .BakuTech-cart-title {
+        margin-bottom: 25px;
+        font-size: 30px;
+        font-weight: 600;
+    }
+
+    .BakuTech-cart-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .cart-item {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto auto auto;
+        align-items: center;
+        gap: 25px;
+        margin: 0 !important;
+        padding: 18px 20px !important;
+        min-height: 120px;
+        background: #fff;
+        border: 1px solid #e7e7e7 !important;
+        border-radius: 8px;
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+        .cart-item:hover {
+            border-color: #d8d8d8 !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .cart-item > div:first-child {
+            min-width: 0;
+            gap: 20px;
+        }
+
+        .cart-item img {
+            width: 90px !important;
+            height: 90px !important;
+            flex-shrink: 0;
+            object-fit: contain !important;
+            border: 1px solid #eeeeee;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .cart-item h5 {
+            margin: 0 0 7px;
+            font-size: 17px;
+            font-weight: 500;
+            color: #222;
+        }
+
+            .cart-item h5:hover {
+                color: #0d6efd;
+            }
+
+        .cart-item .text-muted {
+            font-size: 15px;
+            color: #777 !important;
+        }
+
+        .cart-item .cart-item-quantity {
+            min-width: 35px;
+            text-align: center;
+            font-weight: 500;
+            color: #222;
+        }
+
+        .cart-item .cart-quantity-minus,
+        .cart-item .cart-quantity-plus {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            border: 1px solid #d8d8d8;
+            border-radius: 5px;
+            background: #fff;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+            .cart-item .cart-quantity-minus:hover,
+            .cart-item .cart-quantity-plus:hover {
+                border-color: #222;
+                background: #f7f7f7;
+            }
+
+        .cart-item .fw-bold {
+            min-width: 110px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: 600 !important;
+            color: #222;
+        }
+
+        .cart-item .cart-remove {
+            margin-left: 0 !important;
+            min-width: 48px;
+            height: 38px;
+            border-radius: 5px;
+        }
+
+    .BakuTech-cart-summary {
+        width: 100%;
+        max-width: 420px;
+        margin-left: auto;
+        margin-top: 25px;
+        padding: 22px 25px;
+        background: #fff;
+        border: 1px solid #e7e7e7;
+        border-radius: 8px;
+    }
+
+    .BakuTech-cart-summary-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .BakuTech-cart-summary-label {
+        color: #666;
+        font-size: 15px;
+    }
+
+    .BakuTech-cart-summary-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .BakuTech-cart-summary-total {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eeeeee;
+    }
+
+        .BakuTech-cart-summary-total .BakuTech-cart-summary-label {
+            font-size: 17px;
+            font-weight: 500;
+            color: #222;
+        }
+
+        .BakuTech-cart-summary-total #cart-total-price {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+    #cart-empty {
+        padding: 70px 20px !important;
+        border: 1px solid #eeeeee;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+        #cart-empty h3 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        #cart-empty p {
+            margin-bottom: 25px;
+        }
+
+    @@media (max-width: 767px) {
+
+        .BakuTech-cart-page {
+            padding: 20px 0 40px;
+        }
+
+        .BakuTech-cart-title {
+            margin-bottom: 18px;
+            font-size: 24px;
+        }
+
+        .cart-item {
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            padding: 15px !important;
+        }
+
+            .cart-item > div:first-child {
+                min-width: 0;
+                gap: 10px;
+            }
+
+               
+
+            .cart-item img {
+                width: 75px !important;
+                height: 75px !important;
+            }
+
+            .cart-item h5 {
+                font-size: 15px;
+            }
+
+            .cart-item .cart-item-quantity {
+                margin-left: 8px !important;
+                margin-right: 8px !important;
+            }
+
+            .cart-item .cart-quantity-minus,
+            .cart-item .cart-quantity-plus {
+                width: 34px;
+                height: 34px;
+            }
+
+            .cart-item .fw-bold {
+                min-width: 0;
+                text-align: left;
+            }
+
+            .cart-item .cart-remove {
+                justify-self: end;
+            }
+
+        .BakuTech-cart-summary {
+            max-width: none;
+            margin-top: 18px;
+        }
+    }
+
+    .BakuTech-cart-summary-actions {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .BakuTech-cart-continue {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 18px;
+        border-radius: 5px;
+        background: #f5f5f5;
+        color: #222;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+        .BakuTech-cart-continue:hover {
+            background: #e9e9e9;
+            color: #222;
+            text-decoration: none;
+        }
+
+    .cart-item .cart-quantity-plus:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        background: #f5f5f5;
+        border-color: #e5e5e5;
+    }
+</style>
+
+
+<div class="container BakuTech-cart-page">
+
+    <div class="BakuTech-cart-title">
+        @localizer.GetLocalizedHtmlString("Cart")
+    </div>
+
+    <div id="cart-container">
+
+        <!-- Loading -->
+        <div id="cart-loading" class="text-center py-5">
+            <span>
+                @localizer.GetLocalizedHtmlString("CartLoading")
+            </span>
+        </div>
+
+
+        <!-- Empty Cart -->
+        <div id="cart-empty"
+             class="text-center"
+             style="display: none;">
+
+            <h3>
+                @localizer.GetLocalizedHtmlString("EmptyCart")
+            </h3>
+
+            <p class="text-muted">
+                @localizer.GetLocalizedHtmlString("CartEmptyMessage")
+            </p>
+
+            <a href="/"
+               class="rm-btn dark d-inline-flex align-items-center justify-content-center px-4">
+
+                @localizer.GetLocalizedHtmlString("ViewProducts")
+
+            </a>
+
+        </div>
+
+
+        <!-- Cart Content -->
+        <div id="cart-content"
+             style="display: none;">
+
+            <div id="cart-items"
+                 class="BakuTech-cart-list">
+            </div>
+
+
+            <!-- Summary -->
+            <div class="BakuTech-cart-summary">
+
+                <div class="BakuTech-cart-summary-row">
+
+                    <span class="BakuTech-cart-summary-label">
+                        @localizer.GetLocalizedHtmlString("ProductCount")
+                    </span>
+
+                    <strong id="cart-total-quantity"
+                            class="BakuTech-cart-summary-value">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="BakuTech-cart-summary-row BakuTech-cart-summary-total">
+
+                    <span class="BakuTech-cart-summary-label">
+                        @localizer.GetLocalizedHtmlString("Total")
+                    </span>
+
+                    <strong id="cart-total-price">
+                        0 ₼
+                    </strong>
+
+                </div>
+
+
+                <div class="BakuTech-cart-summary-actions">
+
+                    <button type="button"
+                            id="checkout-button"
+                            class="BakuTech-cart-continue">
+                        @localizer.GetLocalizedHtmlString("Checkout")
+                    </button>
+
+                </div>
+
+                <div id="checkout-form-container" style="display:none; margin-top:30px;">
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h4 class="mb-4">
+                                @localizer.GetLocalizedHtmlString("Checkout")
+                            </h4>
+
+                            <div class="mb-3">
+                                <label for="checkout-customer-name" class="form-label">
+                                    @localizer.GetLocalizedHtmlString("Name")
+                                </label>
+
+                                <input type="text"
+                                       id="checkout-customer-name"
+                                       class="form-control"
+                                       maxlength="150"
+                                       required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="checkout-phone" class="form-label">
+                                    @localizer.GetLocalizedHtmlString("Phone")
+                                </label>
+
+                                <input type="tel"
+                                       id="checkout-phone"
+                                       class="form-control"
+                                       placeholder="0501234567"
+                                       maxlength="15"
+                                       inputmode="numeric"
+                                       required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="checkout-email" class="form-label">
+                                    @localizer.GetLocalizedHtmlString("Email")
+                                </label>
+
+                                <input type="email"
+                                       id="checkout-email"
+                                       class="form-control"
+                                       maxlength="150"
+                                       placeholder="example@gmail.com">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="checkout-address" class="form-label">
+                                    @localizer.GetLocalizedHtmlString("Address")
+                                </label>
+
+                                <textarea id="checkout-address"
+                                          class="form-control"
+                                          rows="4"
+                                          maxlength="500"
+                                          required></textarea>
+                            </div>
+
+                            <div id="checkout-error"
+                                 class="alert alert-danger"
+                                 style="display:none;">
+                            </div>
+
+                            <button type="button"
+                                    id="submit-order-button"
+                                    class="btn btn-primary">
+                                @localizer.GetLocalizedHtmlString("Checkout")
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    window.BakuTechCartLocalization = {
+        remove: '@localizer.GetLocalizedHtmlString("Remove")'
+    };
+</script>
+
+<script src="~/js/cart-page.js"
+        asp-append-version="true"></script>

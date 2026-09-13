@@ -1,0 +1,436 @@
+/* =========================================================
+   BakuTech FOOTER
+   ========================================================= */
+
+.BakuTech-footer {
+    width: 100%;
+    margin-top: 60px;
+    background: #ffffff;
+    color: #222222;
+    border-top: 1px solid #eeeeee;
+}
+
+    .BakuTech-footer .container {
+        width: 100%;
+    }
+
+
+/* =========================================================
+   FOOTER GRID
+   ========================================================= */
+
+.BakuTech-footer-grid {
+    display: grid;
+    grid-template-columns: minmax(230px, 1.25fr) minmax(210px, 1fr) minmax(210px, 1fr) minmax(180px, .9fr);
+    gap: 50px;
+    padding: 55px 0 45px;
+}
+
+
+/* =========================================================
+   COLUMN
+   ========================================================= */
+
+.BakuTech-footer-column {
+    min-width: 0;
+}
+
+.BakuTech-footer-column-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 0 22px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #222222;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: left;
+}
+
+    .BakuTech-footer-column-title i {
+        display: none;
+    }
+
+.BakuTech-footer-column-content {
+    display: block;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.BakuTech-footer-logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.BakuTech-footer-logo {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 180px;
+    max-height: 65px;
+    object-fit: contain;
+}
+
+.BakuTech-footer-company-name {
+    color: #222222;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.BakuTech-footer-description {
+    max-width: 330px;
+    margin: 18px 0 20px;
+    color: #777777;
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+.BakuTech-footer-brand-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #555555;
+    font-size: 13px;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+    .BakuTech-footer-brand-email:hover {
+        color: #222222;
+    }
+
+
+/* =========================================================
+   CONTACT
+   ========================================================= */
+
+.BakuTech-footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 17px;
+}
+
+.BakuTech-footer-contact-icon {
+    flex: 0 0 21px;
+    width: 21px;
+    color: #888888;
+    font-size: 13px;
+    text-align: center;
+}
+
+.BakuTech-footer-contact-label {
+    display: block;
+    margin-bottom: 3px;
+    color: #999999;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+.BakuTech-footer-contact-value {
+    display: block;
+    max-width: 240px;
+    color: #555555;
+    font-size: 13px;
+    line-height: 1.55;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+a.BakuTech-footer-contact-value:hover {
+    color: #222222;
+}
+
+
+/* =========================================================
+   WORKING HOURS
+   ========================================================= */
+
+.BakuTech-footer-working-hours {
+    color: #666666;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+    .BakuTech-footer-working-hours br {
+        line-height: 1.8;
+    }
+
+
+/* =========================================================
+   SOCIAL
+   ========================================================= */
+
+.BakuTech-footer-social-title {
+    margin-top: 26px;
+    margin-bottom: 12px;
+    color: #222222;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.BakuTech-footer-social {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+    .BakuTech-footer-social a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #e3e3e3;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #666666;
+        text-decoration: none;
+        transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+    }
+
+        .BakuTech-footer-social a:hover {
+            background: #222222;
+            border-color: #222222;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+
+/* =========================================================
+   CATEGORY / GENERAL LINKS
+   ========================================================= */
+
+.BakuTech-footer-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+    .BakuTech-footer-links li {
+        margin-bottom: 10px;
+    }
+
+    .BakuTech-footer-links a {
+        display: inline-block;
+        color: #666666;
+        font-size: 13px;
+        line-height: 1.5;
+        text-decoration: none;
+        transition: color .2s ease;
+    }
+
+        .BakuTech-footer-links a:hover {
+            color: #222222;
+        }
+
+
+/* =========================================================
+   QUICK LINKS
+   ========================================================= */
+
+.BakuTech-footer-quick-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    padding: 20px 0;
+    border-top: 1px solid #eeeeee;
+}
+
+    .BakuTech-footer-quick-links a {
+        color: #777777;
+        font-size: 12px;
+        text-decoration: none;
+        transition: color .2s ease;
+    }
+
+        .BakuTech-footer-quick-links a:hover {
+            color: #222222;
+        }
+
+
+/* =========================================================
+   BOTTOM
+   ========================================================= */
+
+.BakuTech-footer-bottom {
+    padding: 18px 0 22px;
+    border-top: 1px solid #eeeeee;
+}
+
+.BakuTech-footer-copyright {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #999999;
+    font-size: 11px;
+    text-align: center;
+}
+
+.BakuTech-footer-separator {
+    color: #cccccc;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .BakuTech-footer {
+        margin-top: 40px;
+    }
+
+
+    /* Main */
+
+    .BakuTech-footer-grid {
+        display: block;
+        padding: 30px 0 0;
+    }
+
+
+    /* Brand */
+
+    .BakuTech-footer-brand-column {
+        padding-bottom: 28px;
+    }
+
+    .BakuTech-footer-logo {
+        max-width: 150px;
+        max-height: 55px;
+    }
+
+    .BakuTech-footer-company-name {
+        font-size: 24px;
+    }
+
+    .BakuTech-footer-description {
+        max-width: none;
+        margin: 14px 0 18px;
+        font-size: 13px;
+    }
+
+
+    /* Accordion */
+
+    .BakuTech-footer-accordion {
+        border-top: 1px solid #eeeeee;
+    }
+
+    .BakuTech-footer-column-title {
+        min-height: 58px;
+        margin: 0;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+        .BakuTech-footer-column-title i {
+            display: block;
+            color: #999999;
+            font-size: 11px;
+            transition: transform .2s ease;
+        }
+
+    .BakuTech-footer-column-content {
+        display: none;
+        padding: 0 0 20px;
+    }
+
+    .BakuTech-footer-accordion.open
+    .BakuTech-footer-column-content {
+        display: block;
+    }
+
+    .BakuTech-footer-accordion.open
+    .BakuTech-footer-column-title i {
+        transform: rotate(180deg);
+    }
+
+
+    /* Contact */
+
+    .BakuTech-footer-contact-item {
+        margin-bottom: 15px;
+    }
+
+    .BakuTech-footer-contact-value {
+        max-width: none;
+    }
+
+
+    /* Social */
+
+    .BakuTech-footer-social-title {
+        margin-top: 22px;
+    }
+
+
+    /* Quick links */
+
+    .BakuTech-footer-quick-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0;
+        padding: 8px 0;
+        text-align: left;
+    }
+
+        .BakuTech-footer-quick-links a {
+            padding: 11px 4px;
+            font-size: 12px;
+        }
+
+
+    /* Bottom */
+
+    .BakuTech-footer-bottom {
+        padding: 17px 0 20px;
+    }
+
+    .BakuTech-footer-copyright {
+        display: block;
+        line-height: 1.7;
+    }
+
+    .BakuTech-footer-separator {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .BakuTech-footer-grid {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    .BakuTech-footer-quick-links {
+        grid-template-columns: 1fr;
+    }
+
+        .BakuTech-footer-quick-links a {
+            padding: 9px 0;
+        }
+}

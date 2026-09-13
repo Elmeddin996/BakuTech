@@ -1,0 +1,14 @@
+namespace BakuTech.Business.DTOs.SpecificationGroups;
+
+public class CreateSpecificationGroupDto
+{
+    public string NameAz { get; set; } = null!;
+
+    public string NameEn { get; set; } = null!;
+
+    public string NameRu { get; set; } = null!;
+
+    public ICollection<int> CategoryIds { get; set; } = new List<int>();
+
+    public int DisplayOrder { get; set; }
+}

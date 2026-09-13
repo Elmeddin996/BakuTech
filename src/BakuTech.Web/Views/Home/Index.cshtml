@@ -1,0 +1,576 @@
+    @model BakuTech.Web.ViewModels.Home.HomeViewModel
+
+
+    @using System.Globalization
+    @using BakuTech.Web.Services
+
+    @{
+        var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    }
+<style>
+    .BakuTech-home-videos {
+        width: 100%;
+        margin: 40px 0;
+    }
+
+    .BakuTech-home-videos-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+
+    .BakuTech-home-video-item {
+        width: 50%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .BakuTech-home-iframe-video {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .BakuTech-home-youtube-host {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+    }
+
+    .BakuTech-home-video-iframe {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border: 0;
+    }
+
+
+    /* =========================================================
+           MOBILE VIDEOS
+           ========================================================= */
+
+    @@media (max-width: 767px) {
+
+        .BakuTech-home-videos-row {
+            margin: 0;
+        }
+
+        .BakuTech-home-video-item {
+            width: 100%;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+            .BakuTech-home-video-item:last-child {
+                margin-bottom: 0;
+            }
+    }
+
+
+    /* =========================================================
+           NEW PRODUCTS
+           ========================================================= */
+
+    .BakuTech-new-products .rm-module-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+
+    /* Mobile product image area */
+    @@media (max-width: 767px) {
+
+        .BakuTech-new-products .rm-module-img {
+            min-height: 140px !important;
+            height: 140px !important;
+        }
+    }
+
+
+    /* Tablet / Desktop */
+    @@media (min-width: 768px) {
+
+        .BakuTech-new-products .rm-module-col {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+    }
+
+
+    /* Large Desktop */
+    @@media (min-width: 1200px) {
+
+        .BakuTech-new-products .rm-module-col {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+    }
+
+
+    /* =========================================================
+           MOBILE HOME SLIDER
+           ========================================================= */
+
+    .BakuTech-home-mobile-slider {
+        display: none;
+    }
+
+    @@media (max-width: 767px) {
+
+        .BakuTech-home-desktop-sliders {
+            display: none !important;
+        }
+
+        .BakuTech-home-mobile-slider {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+            .BakuTech-home-mobile-slider .splide {
+                width: 100%;
+            }
+
+            .BakuTech-home-mobile-slider .splide__slide {
+                width: 100%;
+            }
+
+            .BakuTech-home-mobile-slider img {
+                display: block;
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+    }
+</style>
+
+    <div id="common-home" class="container">
+        <div class="row row-padding-top BakuTech-home-desktop-sliders">
+            <div class="col-xl-9">
+                <div id="ocdbanner-46" class="ocdbanner">
+
+                    <div class="banner-group group-grid">
+                        <div class="respgrid respgrid-1" data-group="1" data-gutter="30">
+
+                            <div class="item-grid item-grid-1" data-colspan="12" data-rowspan="6">
+                                <div class="type-slider">
+                                    <div id="slider-1-1" class="splide slider-splide-1">
+                                        <div class="splide__track">
+                                            <div class="splide__list">
+
+                                                @foreach (var slider in Model.Sliders)
+                                                {
+                                                    <div class="splide__slide item-slide">
+
+                                                        @if (!string.IsNullOrWhiteSpace(slider.TitleAz))
+                                                        {
+                                                            <a href="@slider.ButtonLink">
+                                                                <img src="@slider.Image"
+                                                                     title="@slider.TitleAz"
+                                                                     alt="@slider.DescriptionAz"
+                                                                     class="img-responsive" />
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@slider.Image"
+                                                                 title="@slider.TitleAz"
+                                                                 alt="@slider.DescriptionAz"
+                                                                 class="img-responsive" />
+                                                        }
+
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                        var settings = {
+                            gutter: "30px",
+                            itemclass: "#ocdbanner-46 .respgrid-1 .item-grid",
+                            breakpoints: {
+                                "*": {
+                                    range: "*",
+                                    options: {
+                                        column: 12
+                                    }
+                                }
+                            }
+                        };
+
+                        respgrid("#ocdbanner-46 .respgrid-1", settings);
+                    </script>
+
+                    <script>
+                        new Splide("#ocdbanner-46 #slider-1-1", {
+                            rewind: true,
+                            type: "loop",
+                            perPage: 1,
+                            autoplay: true,
+                            interval: 3000
+                        }).mount();
+                    </script>
+
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div id="ocdbanner-82" class="ocdbanner">
+
+                    <div class="banner-group group-bootstrap" data-group-rows="1">
+                        <div class="row">
+
+                            <div class="item-banner col-sm-12">
+                                <div class="type-slider">
+                                    <div id="slider-1-1" class="splide slider-splide-1">
+                                        <div class="splide__track">
+                                            <div class="splide__list">
+
+                                                @foreach (var miniSlider in Model.MiniSliders)
+                                                {
+                                                    <div class="splide__slide item-slide">
+
+                                                        @if (!string.IsNullOrWhiteSpace(miniSlider.Link))
+                                                        {
+                                                            <a href="@miniSlider.Link">
+                                                                <img src="@miniSlider.Image"
+                                                                     title=""
+                                                                     alt=""
+                                                                     class="img-responsive" />
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@miniSlider.Image"
+                                                                 title=""
+                                                                 alt=""
+                                                                 class="img-responsive" />
+                                                        }
+
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                        new Splide("#ocdbanner-82 #slider-1-1", {
+                            rewind: true,
+                            type: "loop",
+                            perPage: 1,
+                            autoplay: true,
+                            interval: 3000
+                        }).mount();
+                    </script>
+
+                </div>
+            </div>
+        </div>
+        <div class="BakuTech-home-mobile-slider">
+
+            @if (Model.MobileSliders != null &&
+            Model.MobileSliders.Any())
+            {
+                <div id="BakuTech-mobile-home-slider"
+                     class="splide">
+
+                    <div class="splide__track">
+
+                        <ul class="splide__list">
+
+                            @foreach (var mobileSlider in Model.MobileSliders)
+                            {
+                                <li class="splide__slide">
+
+                                    @if (!string.IsNullOrWhiteSpace(mobileSlider.Link))
+                                    {
+                                        <a href="@mobileSlider.Link">
+
+                                            <img src="@mobileSlider.Image"
+                                                 alt=""
+                                                 loading="lazy"
+                                                 class="img-responsive" />
+
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <img src="@mobileSlider.Image"
+                                             alt=""
+                                             loading="lazy"
+                                             class="img-responsive" />
+                                    }
+
+                                </li>
+                            }
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+
+                        const mobileHomeSlider =
+                            document.getElementById('BakuTech-mobile-home-slider');
+
+                        if (mobileHomeSlider &&
+                            typeof Splide !== 'undefined') {
+
+                            new Splide(mobileHomeSlider, {
+                                rewind: true,
+                                type: 'loop',
+                                perPage: 1,
+                                perMove: 1,
+                                autoplay: true,
+                                interval: 3000,
+                                arrows: true,
+                                pagination: true
+                            }).mount();
+
+                        }
+
+                    });
+                </script>
+            }
+
+        </div>
+        <div class="rm-category-wall">
+
+            <div class="row row-padding-top">
+
+                <div class="col-12 rm-module-header">
+                    <span>
+                        @localizer.GetLocalizedHtmlString("PopularCategories")
+                    </span>
+                </div>
+           
+
+            </div>
+
+            <div class="row no-gutters">
+
+                @{
+                    var categoryCulture = currentCulture switch
+                    {
+                        "en" => "en",
+                        "ru" => "ru",
+                        _ => "az"
+                    };
+                }
+
+                @foreach (var category in Model.Categories.Take(12))
+                {
+                    <div class="col-6 col-sm-3 col-lg-2 rm-category-wall-item">
+
+                        <a href="@Url.RouteUrl("category", new
+    {
+        culture = categoryCulture,
+        slug = currentCulture == "en"
+            ? category.SlugEn
+            : currentCulture == "ru"
+                ? category.SlugRu
+                : category.SlugAz
+    })"
+                           class="d-flex flex-column justify-content-between align-items-center text-center">
+
+                            <span class="rm-category-wall-item-image">
+
+                                @if (!string.IsNullOrWhiteSpace(category.Image))
+                                {
+                                    <img src="@category.Image"
+                                         alt="@(currentCulture == "en"
+                ? category.NameEn
+                : currentCulture == "ru"
+                    ? category.NameRu
+                    : category.NameAz)"
+                                         title="@(currentCulture == "en"
+                  ? category.NameEn
+                  : currentCulture == "ru"
+                      ? category.NameRu
+                      : category.NameAz)"
+                                         width="95"
+                                         height="95"
+                                         loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="rm-category-wall-item-placeholder">
+                                        <i class="fas fa-folder-open"></i>
+                                    </span>
+                                }
+
+                            </span>
+
+                            <span>
+                                @(currentCulture == "en"
+                                    ? category.NameEn
+                                    : currentCulture == "ru"
+                                    ? category.NameRu
+                                    : category.NameAz)
+                            </span>
+
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- Mobile catalog button -->
+
+           @*  <div class="row mt-3 d-md-none">
+
+                <div class="col-12 text-center">
+
+                    <button type="button"
+                            class="rm-btn primary rm-footer-catalog-btn w-100 mb-0"
+                            onclick="rmSidebar('Menyu', 'menu', 1);">
+
+                        <span class="rm-btn-icon">
+
+                            <img src="~/catalog/view/theme/oct_remarket/img/sprite.svg#include--footer-catalog-icon"
+                                 alt=""
+                                 width="14"
+                                 height="14" />
+
+                        </span>
+
+                        <span class="rm-btn-text">
+                            Məhsul kataloqu
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div> *@
+
+        </div>
+
+        @if (Model.NewProducts.Any())
+        {
+            <section class="BakuTech-new-products">
+
+                <div class="row row-padding-top">
+                    <div class="col-12 rm-module-header">
+                        <span>
+                            @localizer.GetLocalizedHtmlString("NewArrivals")
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row no-gutters">
+
+                    @foreach (var product in Model.NewProducts)
+                    {
+                        <partial name="_ProductCardGrid"
+                                 model="product" />
+                    }
+
+                </div>
+
+            </section>
+        }
+
+
+        @if (!string.IsNullOrWhiteSpace(Model.YoutubeVideo1) ||
+        !string.IsNullOrWhiteSpace(Model.YoutubeVideo2))
+        {
+            <section class="BakuTech-home-videos">
+
+                <div class="BakuTech-home-videos-row">
+
+                    @if (!string.IsNullOrWhiteSpace(Model.YoutubeVideo1))
+                    {
+                        <div class="BakuTech-home-video-item">
+
+                            <div class="BakuTech-home-iframe-video">
+                                <div class="BakuTech-home-youtube-host">
+
+                                    <iframe src="@GetYoutubeEmbedUrl(Model.YoutubeVideo1)"
+                                            loading="lazy"
+                                            class="BakuTech-home-video-iframe"
+                                            title="YouTube video player"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerpolicy="strict-origin-when-cross-origin"
+                                            allowfullscreen>
+                                    </iframe>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(Model.YoutubeVideo2))
+                    {
+                        <div class="BakuTech-home-video-item">
+
+                            <div class="BakuTech-home-iframe-video">
+                                <div class="BakuTech-home-youtube-host">
+
+                                    <iframe src="@GetYoutubeEmbedUrl(Model.YoutubeVideo2)"
+                                            loading="lazy"
+                                            class="BakuTech-home-video-iframe"
+                                            title="YouTube video player"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            referrerpolicy="strict-origin-when-cross-origin"
+                                            allowfullscreen>
+                                    </iframe>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+        }
+
+        @functions {
+            private string GetYoutubeEmbedUrl(string url)
+            {
+                if (string.IsNullOrWhiteSpace(url))
+                    return "";
+
+                if (url.Contains("youtu.be/"))
+                {
+                    var id = url.Split("youtu.be/")[1].Split('?', '&')[0];
+                    return $"https://www.youtube.com/embed/{id}";
+                }
+
+                if (url.Contains("watch?v="))
+                {
+                    var id = url.Split("watch?v=")[1].Split('&')[0];
+                    return $"https://www.youtube.com/embed/{id}";
+                }
+
+                if (url.Contains("/embed/"))
+                {
+                    return url;
+                }
+
+                return url;
+            }
+        }
+    </div>

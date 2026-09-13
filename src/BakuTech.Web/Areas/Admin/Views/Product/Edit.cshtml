@@ -1,0 +1,454 @@
+@model BakuTech.Web.Areas.Admin.ViewModels.Products.UpdateProductViewModel
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<partial name="_PageHeader" />
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Edit Product</h5>
+
+        <a asp-area="Admin"
+           asp-controller="Product"
+           asp-action="Index"
+           class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back to List
+        </a>
+    </div>
+
+    <div class="card-body">
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input asp-for="Product.Id" type="hidden" />
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <h5 class="border-bottom pb-2 mb-4">
+                General Information
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Product.CategoryId" class="form-label"></label>
+                    <select asp-for="Product.CategoryId"
+                            asp-items="Model.Categories"
+                            class="form-select"></select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Product.BrandId" class="form-label"></label>
+                    <select asp-for="Product.BrandId"
+                            asp-items="Model.Brands"
+                            class="form-select"></select>
+                    <span asp-validation-for="Product.BrandId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Product.Code" class="form-label"></label>
+                    <input asp-for="Product.Code" class="form-control" />
+                    <span asp-validation-for="Product.Code" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Product.Model" class="form-label"></label>
+                    <input asp-for="Product.Model" class="form-control" />
+                </div>
+
+            </div>
+
+            <hr />
+
+            <h5 class="border-bottom pb-2 mb-4">
+                Product Names
+            </h5>
+
+            <div class="mb-3">
+                <label asp-for="Product.NameAz" class="form-label"></label>
+                <input asp-for="Product.NameAz" class="form-control" />
+                <span asp-validation-for="Product.NameAz" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.NameEn" class="form-label"></label>
+                <input asp-for="Product.NameEn" class="form-control" />
+                <span asp-validation-for="Product.NameEn" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.NameRu" class="form-label"></label>
+                <input asp-for="Product.NameRu" class="form-control" />
+                <span asp-validation-for="Product.NameRu" class="text-danger"></span>
+            </div>
+
+
+            <hr />
+
+            <h5 class="border-bottom pb-2 mb-4">
+                Descriptions
+            </h5>
+
+            <div class="mb-3">
+                <label asp-for="Product.DescriptionAz" class="form-label"></label>
+                <textarea asp-for="Product.DescriptionAz" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.DescriptionEn" class="form-label"></label>
+                <textarea asp-for="Product.DescriptionEn" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.DescriptionRu" class="form-label"></label>
+                <textarea asp-for="Product.DescriptionRu" class="form-control" rows="4"></textarea>
+            </div>
+
+            <hr />
+
+            <h5 class="border-bottom pb-2 mb-4">
+                Pricing & Stock
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Product.Price" class="form-label"></label>
+                    <input asp-for="Product.Price" class="form-control" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Product.OldPrice" class="form-label"></label>
+                    <input asp-for="Product.OldPrice" class="form-control" />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Product.StockQuantity" class="form-label"></label>
+                    <input asp-for="Product.StockQuantity" class="form-control" />
+                </div>
+
+            </div>
+
+            <hr />
+
+            <h5 class="border-bottom pb-2 mb-4">
+                Product Options
+            </h5>
+
+            <div class="form-check mb-2">
+                <input asp-for="Product.IsFeatured" class="form-check-input" />
+                <label asp-for="Product.IsFeatured" class="form-check-label"></label>
+            </div>
+
+            <div class="form-check mb-4">
+                <input asp-for="Product.IsNew" class="form-check-input" />
+                <label asp-for="Product.IsNew" class="form-check-label"></label>
+            </div>
+
+            <hr />
+
+            <h5 class="border-bottom pb-2 mb-4">
+                SEO
+            </h5>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoTitleAz" class="form-label"></label>
+                <input asp-for="Product.SeoTitleAz" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoTitleEn" class="form-label"></label>
+                <input asp-for="Product.SeoTitleEn" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoTitleRu" class="form-label"></label>
+                <input asp-for="Product.SeoTitleRu" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoDescriptionAz" class="form-label"></label>
+                <textarea asp-for="Product.SeoDescriptionAz" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoDescriptionEn" class="form-label"></label>
+                <textarea asp-for="Product.SeoDescriptionEn" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoDescriptionRu" class="form-label"></label>
+                <textarea asp-for="Product.SeoDescriptionRu" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoKeywordsAz" class="form-label"></label>
+                <input asp-for="Product.SeoKeywordsAz" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Product.SeoKeywordsEn" class="form-label"></label>
+                <input asp-for="Product.SeoKeywordsEn" class="form-control" />
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Product.SeoKeywordsRu" class="form-label"></label>
+                <input asp-for="Product.SeoKeywordsRu" class="form-control" />
+            </div>
+
+            <hr />
+
+            <h5 class="border-bottom pb-2 mb-4">
+                Specifications
+            </h5>
+
+            @if (Model.Specifications.Any())
+            {
+                var currentGroup = "";
+
+                @for (int i = 0; i < Model.Specifications.Count; i++)
+                {
+                    if (currentGroup != Model.Specifications[i].GroupName)
+                    {
+                        currentGroup = Model.Specifications[i].GroupName;
+
+                        <div class="mt-4 mb-3">
+                            <h6 class="text-primary fw-bold">
+                                @currentGroup
+                            </h6>
+                        </div>
+                    }
+
+                    <input asp-for="Specifications[i].SpecificationId" type="hidden" />
+                    <input asp-for="Specifications[i].GroupName" type="hidden" />
+                    <input asp-for="Specifications[i].SpecificationName" type="hidden" />
+
+                    <div class="card mb-3">
+
+                        <div class="card-header bg-light">
+                            <strong>@Model.Specifications[i].SpecificationName</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Azerbaijani
+                                </label>
+
+                                <input asp-for="Specifications[i].ValueAz"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    English
+                                </label>
+
+                                <input asp-for="Specifications[i].ValueEn"
+                                       class="form-control" />
+                            </div>
+
+                            <div class="mb-0">
+                                <label class="form-label">
+                                    Russian
+                                </label>
+
+                                <input asp-for="Specifications[i].ValueRu"
+                                       class="form-control" />
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No specifications found for this product.
+                </div>
+            }
+
+            <div class="d-flex justify-content-end gap-2">
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    <i class="bi bi-check-lg"></i>
+                    Update
+                </button>
+
+            </div>
+
+        </form>
+
+        <hr class="my-5" />
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Product Images</h5>
+            </div>
+
+            <div class="card-body">
+
+                <form asp-action="UploadImage"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="ProductId"
+                           value="@Model.Product.Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Image</label>
+
+                        <input type="file"
+                               name="Image"
+                               class="form-control"
+                               accept="image/*" />
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input type="checkbox"
+                               name="IsMain"
+                               value="true"
+                               class="form-check-input"
+                               id="IsMain" />
+
+                        <input type="hidden"
+                               name="IsMain"
+                               value="false" />
+
+                        <label class="form-check-label" for="IsMain">
+                            Main Image
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Display Order</label>
+
+                        <input type="number"
+                               name="DisplayOrder"
+                               class="form-control"
+                               value="0" />
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Upload
+                    </button>
+
+                </form>
+
+                <hr />
+
+                @if (Model.Images.Any())
+                {
+                    <div class="row">
+
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-md-3 mb-4">
+
+                                <div class="card h-100">
+
+                                    <img src="@image.Image"
+                                         class="card-img-top"
+                                         style="height:220px;object-fit:contain;padding:10px;" />
+
+                                    <div class="card-body text-center">
+
+                                        @if (image.IsMain)
+                                        {
+                                            <span class="badge bg-success mb-2">
+                                                Main Image
+                                            </span>
+                                        }
+
+                                        <div class="d-grid gap-2">
+
+                                            @if (!image.IsMain)
+                                            {
+                                                <form asp-action="SetMainImage"
+                                                      method="post">
+
+                                                    @Html.AntiForgeryToken()
+
+                                                    <input type="hidden"
+                                                           name="imageId"
+                                                           value="@image.Id" />
+
+                                                    <input type="hidden"
+                                                           name="productId"
+                                                           value="@Model.Product.Id" />
+
+                                                    <button type="submit"
+                                                            class="btn btn-outline-primary btn-sm">
+                                                        Set Main
+                                                    </button>
+
+                                                </form>
+                                            }
+
+                                            <form asp-action="DeleteImage"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="hidden"
+                                                       name="imageId"
+                                                       value="@image.Id" />
+
+                                                <input type="hidden"
+                                                       name="productId"
+                                                       value="@Model.Product.Id" />
+
+                                                <button type="submit"
+                                                        class="btn btn-outline-danger btn-sm">
+                                                    Delete
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info mb-0">
+                        No images uploaded yet.
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

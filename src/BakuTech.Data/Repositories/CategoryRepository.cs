@@ -1,0 +1,133 @@
+using Microsoft.EntityFrameworkCore;
+using BakuTech.Core.Abstractions.Repositories;
+using BakuTech.Core.Common.Pagination;
+using BakuTech.Core.Entities;
+using BakuTech.Data.Context;
+
+namespace BakuTech.Data.Repositories;
+
+public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
+{
+    public CategoryRepository(ApplicationDbContext context)
+        : base(context)
+    {
+    }
+
+    public async Task<List<Category>> GetAllActiveAsync()
+    {
+        return await DbSet
+            .AsNoTracking()
+            .Where(x => x.IsActive)
+            .OrderBy(x => x.DisplayOrder)
+            .ThenBy(x => x.NameAz)
+            .ToListAsync();
+    }
+
+    public async Task<List<Category>> GetSubCategoriesAsync(int parentId)
+    {
+        return await DbSet
+            .AsNoTracking()
+            .Where(c =>
+                c.ParentId == parentId &&
+                c.IsActive)
+            .OrderBy(c => c.DisplayOrder)
+            .ThenBy(c => c.NameAz)
+            .ToListAsync();
+    }
+
+    public async Task<bool> HasSubCategoriesAsync(int categoryId)
+    {
+        return await DbSet
+            .AsNoTracking()
+            .AnyAsync(x =>
+                x.ParentId == categoryId &&
+                x.IsActive);
+    }
+
+    public async Task<Category?> GetBySlugAsync(
+        string slug,
+        string culture)
+    {
+        if (string.IsNullOrWhiteSpace(slug))
+        {
+            return null;
+        }
+
+        slug = slug.Trim();
+
+        var normalizedSlug = slug.ToLower();
+
+        return await DbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c =>
+                c.IsActive &&
+                (
+                    (culture == "az-AZ" &&
+                     c.SlugAz != null &&
+                     c.SlugAz.ToLower() == normalizedSlug)
+
+                    ||
+
+                    (culture == "en-US" &&
+                     c.SlugEn != null &&
+                     c.SlugEn.ToLower() == normalizedSlug)
+
+                    ||
+
+                    (culture == "ru-RU" &&
+                     c.SlugRu != null &&
+                     c.SlugRu.ToLower() == normalizedSlug)
+                ));
+    }
+
+    public override async Task<List<Category>> GetAllAsync()
+    {
+        return await DbSet
+            .AsNoTracking()
+            .Include(x => x.Parent)
+            .OrderBy(x => x.DisplayOrder)
+            .ThenBy(x => x.NameAz)
+            .ToListAsync();
+    }
+
+    public async Task<PagedResult<Category>> GetPagedAsync(
+        PagedRequest request)
+    {
+        var query = DbSet
+            .AsNoTracking()
+            .Include(x => x.Parent)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search =
+                request.Search.Trim().ToLower();
+
+            query = query.Where(x =>
+                x.NameAz.ToLower().Contains(search) ||
+                x.NameEn.ToLower().Contains(search) ||
+                x.NameRu.ToLower().Contains(search) ||
+                x.SlugAz.ToLower().Contains(search) ||
+                x.SlugEn.ToLower().Contains(search) ||
+                x.SlugRu.ToLower().Contains(search));
+        }
+
+        var totalCount =
+            await query.CountAsync();
+
+        var items = await query
+            .OrderBy(x => x.DisplayOrder)
+            .ThenBy(x => x.NameAz)
+            .Skip((request.Page - 1) * 20)
+            .Take(20)
+            .ToListAsync();
+
+        return new PagedResult<Category>
+        {
+            Items = items,
+            CurrentPage = request.Page,
+            PageSize = 20,
+            TotalCount = totalCount
+        };
+    }
+}

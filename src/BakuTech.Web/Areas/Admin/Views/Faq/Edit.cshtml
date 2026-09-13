@@ -1,0 +1,260 @@
+@model BakuTech.Web.Areas.Admin.ViewModels.Faqs.EditFaqViewModel
+
+@{
+    ViewData["Title"] = "Edit FAQ";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Edit FAQ</h1>
+            <p class="text-muted mb-0">
+                Update the frequently asked question.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Faq"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
+    </div>
+
+    <form asp-area="Admin"
+          asp-controller="Faq"
+          asp-action="Edit"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Faq.Id" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3"></div>
+
+        <div class="row">
+
+            <!-- AZ -->
+            <div class="col-lg-4">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-header">
+                        <strong>Azərbaycan dili</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.QuestionAz"
+                                   class="form-label">
+                                Sual
+                            </label>
+
+                            <input asp-for="Faq.QuestionAz"
+                                   class="form-control"
+                                   placeholder="Məsələn: Çatdırılma neçə gün çəkir?" />
+
+                            <span asp-validation-for="Faq.QuestionAz"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.AnswerAz"
+                                   class="form-label">
+                                Cavab
+                            </label>
+
+                            <textarea asp-for="Faq.AnswerAz"
+                                      class="form-control"
+                                      rows="6"
+                                      placeholder="Sualın cavabını daxil edin..."></textarea>
+
+                            <span asp-validation-for="Faq.AnswerAz"
+                                  class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- EN -->
+            <div class="col-lg-4">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-header">
+                        <strong>English</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.QuestionEn"
+                                   class="form-label">
+                                Question
+                            </label>
+
+                            <input asp-for="Faq.QuestionEn"
+                                   class="form-control"
+                                   placeholder="Example: How long does delivery take?" />
+
+                            <span asp-validation-for="Faq.QuestionEn"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.AnswerEn"
+                                   class="form-label">
+                                Answer
+                            </label>
+
+                            <textarea asp-for="Faq.AnswerEn"
+                                      class="form-control"
+                                      rows="6"
+                                      placeholder="Enter the answer..."></textarea>
+
+                            <span asp-validation-for="Faq.AnswerEn"
+                                  class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RU -->
+            <div class="col-lg-4">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-header">
+                        <strong>Русский язык</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.QuestionRu"
+                                   class="form-label">
+                                Вопрос
+                            </label>
+
+                            <input asp-for="Faq.QuestionRu"
+                                   class="form-control"
+                                   placeholder="Например: Сколько дней занимает доставка?" />
+
+                            <span asp-validation-for="Faq.QuestionRu"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.AnswerRu"
+                                   class="form-label">
+                                Ответ
+                            </label>
+
+                            <textarea asp-for="Faq.AnswerRu"
+                                      class="form-control"
+                                      rows="6"
+                                      placeholder="Введите ответ..."></textarea>
+
+                            <span asp-validation-for="Faq.AnswerRu"
+                                  class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- General information -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+                <strong>Ümumi məlumatlar</strong>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label asp-for="Faq.DisplayOrder"
+                                   class="form-label">
+                                Display Order
+                            </label>
+
+                            <input asp-for="Faq.DisplayOrder"
+                                   type="number"
+                                   min="0"
+                                   class="form-control" />
+
+                            <span asp-validation-for="Faq.DisplayOrder"
+                                  class="text-danger"></span>
+
+                            <div class="form-text">
+                                Kiçik rəqəmlər əvvəl göstərilir.
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center">
+
+                        <div class="form-check mt-2">
+
+                            <input asp-for="Faq.IsActive"
+                                   class="form-check-input" />
+
+                            <label asp-for="Faq.IsActive"
+                                   class="form-check-label">
+                                Aktiv FAQ
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end gap-2 mb-4">
+
+            <a asp-area="Admin"
+               asp-controller="Faq"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Ləğv et
+            </a>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                <i class="bi bi-check-lg"></i>
+                Dəyişiklikləri yadda saxla
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

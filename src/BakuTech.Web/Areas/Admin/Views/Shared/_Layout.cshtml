@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BakuTech Admin</title>
+
+    @await Html.PartialAsync("_Styles")
+</head>
+<body>
+    <div class="d-flex">
+        @await Html.PartialAsync("_Sidebar")
+
+        <div class="d-flex flex-column flex-fill">
+            @await Html.PartialAsync("_Navbar")
+
+            <main class="flex-fill p-4">
+                @RenderBody()
+            </main>
+
+            @await Html.PartialAsync("_Footer")
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_Scripts")
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

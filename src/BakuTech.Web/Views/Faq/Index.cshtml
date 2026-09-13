@@ -1,0 +1,104 @@
+@using System.Globalization
+@model List<BakuTech.Business.DTOs.Faqs.FaqDto>
+
+@{
+    var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    ViewData["Title"] = culture switch
+    {
+        "en" => "Frequently Asked Questions",
+        "ru" => "Часто задаваемые вопросы",
+        _ => "Tez-tez verilən suallar"
+    };
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">@ViewData["Title"]</h1>
+
+        <p class="text-muted mt-2">
+            @(culture switch
+            {
+                "en" => "Find answers to the most frequently asked questions.",
+                "ru" => "Ответы на часто задаваемые вопросы.",
+                _ => "Ən çox verilən sualların cavablarını burada tapa bilərsiniz."
+            })
+        </p>
+    </div>
+
+    <div class="faq-list mx-auto" style="max-width: 900px;">
+
+        @foreach (var faq in Model)
+        {
+            var question = culture switch
+            {
+                "en" => faq.QuestionEn,
+                "ru" => faq.QuestionRu,
+                _ => faq.QuestionAz
+            };
+
+            var answer = culture switch
+            {
+                "en" => faq.AnswerEn,
+                "ru" => faq.AnswerRu,
+                _ => faq.AnswerAz
+            };
+
+            <details class="faq-item mb-3">
+
+                <summary class="faq-question">
+                    <span>@question</span>
+
+                    <i class="bi bi-chevron-down"></i>
+                </summary>
+
+                <div class="faq-answer">
+                    @answer
+                </div>
+
+            </details>
+        }
+
+    </div>
+
+</div>
+
+<style>
+    .faq-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .faq-question {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 22px;
+        cursor: pointer;
+        font-weight: 600;
+        list-style: none;
+    }
+
+        .faq-question::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-question i {
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+    .faq-item[open] .faq-question i {
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        padding: 0 22px 20px;
+        color: #6c757d;
+        line-height: 1.7;
+    }
+</style>

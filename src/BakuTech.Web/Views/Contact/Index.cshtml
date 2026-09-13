@@ -1,0 +1,932 @@
+@model BakuTech.Business.DTOs.Settings.SettingDetailDto
+
+@using BakuTech.Web.Services
+@inject LocService localizer
+
+@{
+    ViewData["Title"] = localizer.GetLocalizedHtmlString("Contact");
+}
+
+<div class="BakuTech-contact-page">
+
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="BakuTech-contact-breadcrumb">
+
+            <ol class="breadcrumb rm-breadcrumb">
+
+                <li class="breadcrumb-item rm-breadcrumb-item">
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+
+                <li class="breadcrumb-item rm-breadcrumb-item active"
+                    aria-current="page">
+                    @localizer.GetLocalizedHtmlString("Contact")
+                </li>
+
+            </ol>
+
+        </nav>
+
+
+        <!-- Header -->
+        <div class="BakuTech-contact-header">
+
+            <div class="BakuTech-contact-header-content">
+
+                <span class="BakuTech-contact-eyebrow">
+                    @localizer.GetLocalizedHtmlString("ContactInformation")
+                </span>
+
+                @if (!string.IsNullOrWhiteSpace(Model.CompanyName))
+                {
+                    <p>
+                        @Model.CompanyName
+                    </p>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- Contact information -->
+        <section class="BakuTech-contact-information">
+
+            <div class="row g-4">
+
+
+                <!-- Phones -->
+                <div class="col-lg-6">
+
+                    <div class="BakuTech-contact-panel">
+
+                        <div class="BakuTech-contact-panel-header">
+
+                            <div class="BakuTech-contact-panel-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+
+                            <div>
+                                <span class="BakuTech-contact-panel-label">
+                                    @localizer.GetLocalizedHtmlString("Phone")
+                                </span>
+
+                                <h2>
+                                    @localizer.GetLocalizedHtmlString("ContactInformation")
+                                </h2>
+                            </div>
+
+                        </div>
+
+
+                        <div class="BakuTech-contact-details">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Phone1))
+                            {
+                                <a href="@($"tel:{Model.Phone1}")"
+                                   class="BakuTech-contact-detail">
+
+                                    <span class="BakuTech-contact-detail-icon">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-content">
+
+                                        <small>
+                                            @localizer.GetLocalizedHtmlString("Phone")
+                                        </small>
+
+                                        <strong>
+                                            @Model.Phone1
+                                        </strong>
+
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-arrow">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+
+                                </a>
+                            }
+
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Phone2))
+                            {
+                                <a href="@($"tel:{Model.Phone2}")"
+                                   class="BakuTech-contact-detail">
+
+                                    <span class="BakuTech-contact-detail-icon">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-content">
+
+                                        <small>
+                                            @localizer.GetLocalizedHtmlString("Phone")
+                                        </small>
+
+                                        <strong>
+                                            @Model.Phone2
+                                        </strong>
+
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-arrow">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+
+                                </a>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Email / WhatsApp -->
+                <div class="col-lg-6">
+
+                    <div class="BakuTech-contact-panel">
+
+                        <div class="BakuTech-contact-panel-header">
+
+                            <div class="BakuTech-contact-panel-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+
+                            <div>
+                                <span class="BakuTech-contact-panel-label">
+                                    @localizer.GetLocalizedHtmlString("Email")
+                                </span>
+
+                                <h2>
+                                    @localizer.GetLocalizedHtmlString("ContactInformation")
+                                </h2>
+                            </div>
+
+                        </div>
+
+
+                        <div class="BakuTech-contact-details">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Email))
+                            {
+                                <a href="mailto:@Model.Email"
+                                   class="BakuTech-contact-detail">
+
+                                    <span class="BakuTech-contact-detail-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-content">
+
+                                        <small>
+                                            @localizer.GetLocalizedHtmlString("Email")
+                                        </small>
+
+                                        <strong>
+                                            @Model.Email
+                                        </strong>
+
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-arrow">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+
+                                </a>
+                            }
+
+
+                            @if (!string.IsNullOrWhiteSpace(Model.WhatsApp))
+                            {
+                                <a href="@Model.WhatsApp"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="BakuTech-contact-detail">
+
+                                    <span class="BakuTech-contact-detail-icon">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-content">
+
+                                        <small>
+                                            WhatsApp
+                                        </small>
+
+                                        <strong>
+                                            @localizer.GetLocalizedHtmlString("ContactViaWhatsApp")
+                                        </strong>
+
+                                    </span>
+
+                                    <span class="BakuTech-contact-detail-arrow">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+
+                                </a>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Branches banner -->
+        <section class="BakuTech-contact-banner">
+
+            <div class="BakuTech-contact-banner-icon">
+                <i class="fas fa-store"></i>
+            </div>
+
+            <div class="BakuTech-contact-banner-content">
+
+                <h3>
+                    @localizer.GetLocalizedHtmlString("Branches")
+                </h3>
+
+                <p>
+                    @localizer.GetLocalizedHtmlString("Address")
+                </p>
+
+            </div>
+
+            <a asp-controller="Branch"
+               asp-action="Index"
+               class="BakuTech-contact-banner-button">
+
+                <i class="fas fa-map-marker-alt"></i>
+
+                <span>
+                    @localizer.GetLocalizedHtmlString("Branches")
+                </span>
+
+            </a>
+
+        </section>
+
+        <!-- Social Networks -->
+        @if (!string.IsNullOrWhiteSpace(Model.Facebook) ||
+             !string.IsNullOrWhiteSpace(Model.Instagram) ||
+             !string.IsNullOrWhiteSpace(Model.Youtube) ||
+             !string.IsNullOrWhiteSpace(Model.Telegram) ||
+             !string.IsNullOrWhiteSpace(Model.TikTok))
+        {
+            <section class="BakuTech-social-section">
+
+                <div class="BakuTech-social-header">
+
+                    <span class="BakuTech-social-eyebrow">
+                        @localizer.GetLocalizedHtmlString("SocialNetworks")
+                    </span>
+
+                    <h2>
+                        @localizer.GetLocalizedHtmlString("SocialNetworks")
+                    </h2>
+
+                    <div class="BakuTech-social-divider"></div>
+
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Facebook))
+                    {
+                        <div class="col-6 col-md-4 col-lg">
+
+                            <a href="@Model.Facebook"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="BakuTech-social-card">
+
+                                <div class="BakuTech-social-card-icon">
+                                    <i class="fab fa-facebook-f"></i>
+                                </div>
+
+                                <div class="BakuTech-social-card-name">
+                                    Facebook
+                                </div>
+
+                                <div class="BakuTech-social-card-action">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Instagram))
+                    {
+                        <div class="col-6 col-md-4 col-lg">
+
+                            <a href="@Model.Instagram"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="BakuTech-social-card">
+
+                                <div class="BakuTech-social-card-icon">
+                                    <i class="fab fa-instagram"></i>
+                                </div>
+
+                                <div class="BakuTech-social-card-name">
+                                    Instagram
+                                </div>
+
+                                <div class="BakuTech-social-card-action">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Youtube))
+                    {
+                        <div class="col-6 col-md-4 col-lg">
+
+                            <a href="@Model.Youtube"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="BakuTech-social-card">
+
+                                <div class="BakuTech-social-card-icon">
+                                    <i class="fab fa-youtube"></i>
+                                </div>
+
+                                <div class="BakuTech-social-card-name">
+                                    YouTube
+                                </div>
+
+                                <div class="BakuTech-social-card-action">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Telegram))
+                    {
+                        <div class="col-6 col-md-4 col-lg">
+
+                            <a href="@Model.Telegram"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="BakuTech-social-card">
+
+                                <div class="BakuTech-social-card-icon">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </div>
+
+                                <div class="BakuTech-social-card-name">
+                                    Telegram
+                                </div>
+
+                                <div class="BakuTech-social-card-action">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.TikTok))
+                    {
+                        <div class="col-6 col-md-4 col-lg">
+
+                            <a href="@Model.TikTok"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="BakuTech-social-card">
+
+                                <div class="BakuTech-social-card-icon">
+                                    <i class="fab fa-tiktok"></i>
+                                </div>
+
+                                <div class="BakuTech-social-card-name">
+                                    TikTok
+                                </div>
+
+                                <div class="BakuTech-social-card-action">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+        }
+
+
+    </div>
+
+</div>
+
+
+<style>
+
+    /* =========================================================
+       CONTACT PAGE
+       ========================================================= */
+
+    .BakuTech-contact-page {
+        padding-bottom: 70px;
+    }
+
+
+    /* Breadcrumb */
+
+    .BakuTech-contact-breadcrumb {
+        padding-top: 5px;
+        margin-bottom: 35px;
+    }
+
+
+    /* Header */
+
+    .BakuTech-contact-header {
+        position: relative;
+        padding: 55px 30px;
+        margin-bottom: 45px;
+        overflow: hidden;
+        background: #f6f8fa;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .BakuTech-contact-header::before {
+        content: "";
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        left: -100px;
+        top: -120px;
+        border-radius: 50%;
+        background: rgba(0, 103, 173, .07);
+    }
+
+    .BakuTech-contact-header::after {
+        content: "";
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        right: -120px;
+        bottom: -160px;
+        border-radius: 50%;
+        background: rgba(0, 103, 173, .06);
+    }
+
+    .BakuTech-contact-header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .BakuTech-contact-eyebrow {
+        display: inline-block;
+        margin-bottom: 12px;
+        color: #0067ad;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    .BakuTech-contact-header h1 {
+        margin: 0 0 12px;
+        color: #202020;
+        font-size: 42px;
+        font-weight: 700;
+    }
+
+    .BakuTech-contact-header p {
+        margin: 0;
+        color: #777;
+        font-size: 17px;
+    }
+
+
+    /* Contact panels */
+
+    .BakuTech-contact-information {
+        margin-bottom: 70px;
+    }
+
+    .BakuTech-contact-panel {
+        height: 100%;
+        padding: 32px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, .035);
+    }
+
+    .BakuTech-contact-panel-header {
+        display: flex;
+        align-items: center;
+        gap: 17px;
+        padding-bottom: 25px;
+        margin-bottom: 5px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .BakuTech-contact-panel-icon {
+        width: 58px;
+        height: 58px;
+        min-width: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0067ad;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 21px;
+    }
+
+    .BakuTech-contact-panel-label {
+        display: block;
+        margin-bottom: 4px;
+        color: #8a8a8a;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+    }
+
+    .BakuTech-contact-panel-header h2 {
+        margin: 0;
+        color: #222;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+
+    /* Contact details */
+
+    .BakuTech-contact-details {
+        padding-top: 10px;
+    }
+
+    .BakuTech-contact-detail {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 5px;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all .2s ease;
+    }
+
+    .BakuTech-contact-detail:last-child {
+        border-bottom: 0;
+    }
+
+    .BakuTech-contact-detail:hover {
+        padding-left: 10px;
+        color: inherit;
+    }
+
+    .BakuTech-contact-detail-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f6fa;
+        color: #0067ad;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+
+    .BakuTech-contact-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .BakuTech-contact-detail-content small {
+        display: block;
+        margin-bottom: 4px;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .BakuTech-contact-detail-content strong {
+        display: block;
+        overflow-wrap: anywhere;
+        color: #222;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .BakuTech-contact-detail-arrow {
+        color: #aaa;
+        font-size: 13px;
+        transition: transform .2s ease;
+    }
+
+    .BakuTech-contact-detail:hover .BakuTech-contact-detail-arrow {
+        transform: translateX(4px);
+        color: #0067ad;
+    }
+
+
+    /* Social section */
+
+    .BakuTech-social-section {
+        padding: 50px 0 60px;
+        margin-bottom: 20px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .BakuTech-social-header {
+        margin-bottom: 35px;
+        text-align: center;
+    }
+
+    .BakuTech-social-eyebrow {
+        display: block;
+        margin-bottom: 8px;
+        color: #0067ad;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    .BakuTech-social-header h2 {
+        margin: 0;
+        color: #222;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .BakuTech-social-divider {
+        width: 55px;
+        height: 3px;
+        margin: 15px auto 0;
+        background: #0067ad;
+        border-radius: 10px;
+    }
+
+
+    /* Social cards */
+
+    .BakuTech-social-card {
+        position: relative;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 25px 15px;
+        overflow: hidden;
+        background: #fff;
+        color: #222;
+        text-decoration: none;
+        border: 1px solid #e4e6e8;
+        border-radius: 10px;
+        box-shadow: 0 5px 22px rgba(0, 0, 0, .035);
+        transition: all .25s ease;
+    }
+
+    .BakuTech-social-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 3px;
+        background: #0067ad;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform .25s ease;
+    }
+
+    .BakuTech-social-card:hover {
+        color: #222;
+        text-decoration: none;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+    }
+
+    .BakuTech-social-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .BakuTech-social-card-icon {
+        width: 68px;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 17px;
+        background: #f3f5f7;
+        color: #0067ad;
+        border-radius: 50%;
+        font-size: 28px;
+        transition: all .25s ease;
+    }
+
+    .BakuTech-social-card:hover .BakuTech-social-card-icon {
+        background: #0067ad;
+        color: #fff;
+    }
+
+    .BakuTech-social-card-name {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .BakuTech-social-card-action {
+        position: absolute;
+        right: 15px;
+        bottom: 15px;
+        color: #bbb;
+        font-size: 11px;
+    }
+
+    .BakuTech-social-card:hover .BakuTech-social-card-action {
+        color: #0067ad;
+    }
+
+
+    /* Bottom banner */
+
+    .BakuTech-contact-banner {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        padding: 30px 35px;
+        background: #0067ad;
+        border-radius: 10px;
+        color: #fff;
+    }
+
+    .BakuTech-contact-banner-icon {
+        width: 58px;
+        height: 58px;
+        min-width: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, .14);
+        border-radius: 8px;
+        font-size: 22px;
+    }
+
+    .BakuTech-contact-banner-content {
+        flex: 1;
+    }
+
+    .BakuTech-contact-banner-content h3 {
+        margin: 0 0 5px;
+        color: #fff;
+        font-size: 21px;
+        font-weight: 600;
+    }
+
+    .BakuTech-contact-banner-content p {
+        margin: 0;
+        color: rgba(255, 255, 255, .8);
+        font-size: 14px;
+    }
+
+    .BakuTech-contact-banner-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 22px;
+        background: #fff;
+        color: #0067ad;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all .2s ease;
+    }
+
+    .BakuTech-contact-banner-button:hover {
+        background: #f2f2f2;
+        color: #0067ad;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+
+    /* Responsive */
+
+    @@media (max-width: 991px) {
+
+        .BakuTech-contact-header h1 {
+            font-size: 36px;
+        }
+
+        .BakuTech-social-card {
+            height: 175px;
+        }
+
+    }
+
+
+    @@media (max-width: 767px) {
+
+        .BakuTech-contact-page {
+            padding-bottom: 40px;
+        }
+
+        .BakuTech-contact-header {
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+
+        .BakuTech-contact-header h1 {
+            font-size: 30px;
+        }
+
+        .BakuTech-contact-header p {
+            font-size: 15px;
+        }
+
+        .BakuTech-contact-panel {
+            padding: 22px;
+        }
+
+        .BakuTech-contact-panel-header {
+            gap: 12px;
+        }
+
+        .BakuTech-contact-panel-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            font-size: 18px;
+        }
+
+        .BakuTech-contact-panel-header h2 {
+            font-size: 17px;
+        }
+
+        .BakuTech-contact-detail-content strong {
+            font-size: 14px;
+        }
+
+        .BakuTech-social-section {
+            padding: 35px 0 40px;
+        }
+
+        .BakuTech-social-header h2 {
+            font-size: 24px;
+        }
+
+        .BakuTech-social-card {
+            height: 155px;
+        }
+
+        .BakuTech-social-card-icon {
+            width: 58px;
+            height: 58px;
+            font-size: 24px;
+        }
+
+        .BakuTech-contact-banner {
+            flex-direction: column;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .BakuTech-contact-banner-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+    }
+
+</style>
