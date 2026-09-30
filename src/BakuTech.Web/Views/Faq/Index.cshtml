@@ -1,15 +1,103 @@
 @using System.Globalization
+@using System.Text.Json
 @model List<BakuTech.Business.DTOs.Faqs.FaqDto>
 
 @{
     var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-    ViewData["Title"] = culture switch
+    var pageTitle = culture switch
     {
         "en" => "Frequently Asked Questions",
         "ru" => "Часто задаваемые вопросы",
         _ => "Tez-tez verilən suallar"
     };
+
+    var pageDescription = culture switch
+    {
+        "en" => "Find answers to the most frequently asked questions about BakuTech products, services and shopping.",
+        "ru" => "Ответы на часто задаваемые вопросы о товарах, услугах и покупках в BakuTech.",
+        _ => "BakuTech məhsulları, xidmətləri və alış-veriş haqqında ən çox verilən sualların cavablarını burada tapa bilərsiniz."
+    };
+
+    var pageKeywords = culture switch
+    {
+        "en" => "BakuTech FAQ, frequently asked questions, questions and answers",
+        "ru" => "BakuTech FAQ, часто задаваемые вопросы, вопросы и ответы",
+        _ => "BakuTech FAQ, tez-tez verilən suallar, suallar və cavablar"
+    };
+
+    ViewData["Title"] = pageTitle;
+    ViewData["Description"] = pageDescription;
+    ViewData["Keywords"] = pageKeywords;
+
+
+    var faqAzUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/az/faq";
+    var faqEnUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/en/faq";
+    var faqRuUrl = $"{Context.Request.Scheme}://{Context.Request.Host}/ru/faq";
+
+    ViewData["FaqAzUrl"] = "/az/faq";
+    ViewData["FaqEnUrl"] = "/en/faq";
+    ViewData["FaqRuUrl"] = "/ru/faq";
+
+
+    var currentFaqUrl = culture switch
+    {
+        "en" => faqEnUrl,
+        "ru" => faqRuUrl,
+        _ => faqAzUrl
+    };
+
+    ViewData["CanonicalUrl"] = currentFaqUrl;
+
+
+    var faqSchemaItems = Model
+    .Select(faq =>
+    {
+        var question = culture switch
+        {
+            "en" => faq.QuestionEn,
+            "ru" => faq.QuestionRu,
+            _ => faq.QuestionAz
+        };
+
+        var answer = culture switch
+        {
+            "en" => faq.AnswerEn,
+            "ru" => faq.AnswerRu,
+            _ => faq.AnswerAz
+        };
+
+        return new Dictionary<string, object?>
+                {
+                    ["@type"] = "Question",
+                    ["name"] = question,
+                    ["acceptedAnswer"] = new Dictionary<string, object?>
+                    {
+                        ["@type"] = "Answer",
+                        ["text"] = answer
+                    }
+                };
+    })
+    .ToList();
+
+    var faqSchema = new Dictionary<string, object?>
+            {
+                ["@context"] = "https://schema.org",
+                ["@type"] = "FAQPage",
+                ["mainEntity"] = faqSchemaItems
+            };
+}
+
+@section Head
+{
+    <link rel="alternate" hreflang="az" href="@faqAzUrl" />
+    <link rel="alternate" hreflang="en" href="@faqEnUrl" />
+    <link rel="alternate" hreflang="ru" href="@faqRuUrl" />
+    <link rel="alternate" hreflang="x-default" href="@faqAzUrl" />
+
+    <script type="application/ld+json">
+        @Html.Raw(JsonSerializer.Serialize(faqSchema))
+    </script>
 }
 
 <div class="container py-5">
@@ -20,9 +108,9 @@
         <p class="text-muted mt-2">
             @(culture switch
             {
-                "en" => "Find answers to the most frequently asked questions.",
-                "ru" => "Ответы на часто задаваемые вопросы.",
-                _ => "Ən çox verilən sualların cavablarını burada tapa bilərsiniz."
+            "en" => "Find answers to the most frequently asked questions.",
+            "ru" => "Ответы на часто задаваемые вопросы.",
+            _ => "Ən çox verilən sualların cavablarını burada tapa bilərsiniz."
             })
         </p>
     </div>
@@ -31,33 +119,33 @@
 
         @foreach (var faq in Model)
         {
-            var question = culture switch
-            {
-                "en" => faq.QuestionEn,
-                "ru" => faq.QuestionRu,
-                _ => faq.QuestionAz
-            };
+        var question = culture switch
+        {
+        "en" => faq.QuestionEn,
+        "ru" => faq.QuestionRu,
+        _ => faq.QuestionAz
+        };
 
-            var answer = culture switch
-            {
-                "en" => faq.AnswerEn,
-                "ru" => faq.AnswerRu,
-                _ => faq.AnswerAz
-            };
+    var answer = culture switch
+    {
+        "en" => faq.AnswerEn,
+        "ru" => faq.AnswerRu,
+        _ => faq.AnswerAz
+    };
 
-            <details class="faq-item mb-3">
+        <details class="faq-item mb-3">
 
-                <summary class="faq-question">
-                    <span>@question</span>
+            <summary class="faq-question">
+                <span>@question</span>
 
-                    <i class="bi bi-chevron-down"></i>
-                </summary>
+                <i class="bi bi-chevron-down"></i>
+            </summary>
 
-                <div class="faq-answer">
-                    @answer
-                </div>
+            <div class="faq-answer">
+                @answer
+            </div>
 
-            </details>
+        </details>
         }
 
     </div>

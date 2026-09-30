@@ -25,6 +25,7 @@ public class SearchController : Controller
     int? category_id,
     int page = 1)
     {
+        ViewData["Robots"] = "noindex,nofollow";
         var request = new PagedRequest
         {
             Page = page,
@@ -49,7 +50,6 @@ public class SearchController : Controller
         return View(model);
     }
 
-    [HttpGet]
     [HttpGet]
     public async Task<IActionResult> LiveSearch(string keyword)
     {

@@ -2,6 +2,7 @@
 @using BakuTech.Business.Abstractions.Services
 @using BakuTech.Web.Services
 @using BakuTech.Web.ViewModels.Layout
+@using BakuTech.Web.ViewModels.SEO
 
 @inject ISettingService SettingService
 @inject ICategoryService CategoryService
@@ -17,6 +18,9 @@
     var setting = model.Setting;
 
     var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    var siteUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var searchUrl = $"{siteUrl}/Search?q={{search_term_string}}";
 
     var address = culture switch
     {
@@ -39,26 +43,40 @@
         _ => setting?.FooterTextAz
     };
 
-    var seoTitle = culture switch
-    {
-        "en" => setting?.DefaultSeoTitleEn,
-        "ru" => setting?.DefaultSeoTitleRu,
-        _ => setting?.DefaultSeoTitleAz
-    };
+    var seo = new SeoMetadataViewModel
+            {
+                Title = ViewData["Title"]?.ToString()
+                     ?? culture switch
+                     {
+                         "en" => setting?.DefaultSeoTitleEn,
+                         "ru" => setting?.DefaultSeoTitleRu,
+                         _ => setting?.DefaultSeoTitleAz
+                     }
+                     ?? setting?.CompanyName
+                     ?? "BakuTech",
 
-    var seoDescription = culture switch
-    {
-        "en" => setting?.DefaultSeoDescriptionEn,
-        "ru" => setting?.DefaultSeoDescriptionRu,
-        _ => setting?.DefaultSeoDescriptionAz
-    };
+                Description = ViewData["Description"]?.ToString()
+                            ?? culture switch
+                            {
+                                "en" => setting?.DefaultSeoDescriptionEn,
+                                "ru" => setting?.DefaultSeoDescriptionRu,
+                                _ => setting?.DefaultSeoDescriptionAz
+                            },
 
-    var seoKeywords = culture switch
-    {
-        "en" => setting?.DefaultSeoKeywordsEn,
-        "ru" => setting?.DefaultSeoKeywordsRu,
-        _ => setting?.DefaultSeoKeywordsAz
-    };
+                Keywords = ViewData["Keywords"]?.ToString()
+                   ?? culture switch
+                   {
+                       "en" => setting?.DefaultSeoKeywordsEn,
+                       "ru" => setting?.DefaultSeoKeywordsRu,
+                       _ => setting?.DefaultSeoKeywordsAz
+                   },
+
+                CanonicalUrl = ViewData["CanonicalUrl"]?.ToString()
+                     ?? $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}",
+
+                OgType = "website",
+                Robots = ViewData["Robots"]?.ToString() ?? "index,follow"
+            };
 }
 
 <!DOCTYPE html>
@@ -73,32 +91,25 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>
-        @(ViewData["Title"] ?? seoTitle ?? setting?.CompanyName ?? "BakuTech")
-    </title>
+    <title>@seo.Title</title>
 
-    <meta name="description"
-          content="@(ViewData["Description"] ?? seoDescription ?? "")" />
+    <meta name="description" content="@seo.Description" />
 
-
-    <meta name="keywords"
-          content="@seoKeywords" />
+    <meta name="keywords" content="@seo.Keywords" />
 
     <meta name="author" content="BakuTech" />
 
-    <meta name="robots" content="index,follow" />
+    <meta name="robots" content="@seo.Robots" />
 
     <base href="~/" />
 
     <!-- Open Graph -->
-    <meta property="og:title"
-          content="@(ViewData["Title"] ?? seoTitle ?? setting?.CompanyName ?? "BakuTech")" />
-    <meta property="og:description"
-          content="@(ViewData["Description"] ?? seoDescription ?? "")" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name"
-          content="@setting?.CompanyName" />
-    <meta property="og:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}")" />
+    <meta property="og:title" content="@seo.Title" />
+    <meta property="og:description" content="@seo.Description" />
+    <meta property="og:type" content="@seo.OgType" />
+    <meta property="og:site_name" content="@setting?.CompanyName" />
+    <meta property="og:url" content="@seo.CanonicalUrl" />
+
     @if (!string.IsNullOrWhiteSpace(setting?.Logo))
     {
         <meta property="og:image" content="@setting.Logo" />
@@ -112,8 +123,9 @@
           : setting.Logo)" />
 
     <!-- Canonical -->
-    <link rel="canonical"
-          href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}")" />
+    <link rel="canonical" href="@seo.CanonicalUrl" />
+
+    @RenderSection("Head", required: false)
 
     <!-- Preload Logo -->
     @if (!string.IsNullOrWhiteSpace(setting?.Logo))
@@ -161,15 +173,47 @@
     <!-- Structured Data -->
     <script type="application/ld+json">
         {
-            "@@context":"https://schema.org",
-            "@@type":"WebSite",
-            "name":"BakuTech",
-            "url":"https://BakuTech.az",
-            "potentialAction":{
-                "@@type":"SearchAction",
-                "target":"https://BakuTech.az/search?search={search_term_string}",
-                "query-input":"required name=search_term_string"
+            "@@context": "https://schema.org",
+            "@@type": "WebSite",
+            "name": "BakuTech",
+            "url": "@siteUrl",
+            "potentialAction": {
+                "@@type": "SearchAction",
+                "target": "@searchUrl",
+                "query-input": "required name=search_term_string"
             }
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "Organization",
+            "name": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(setting?.CompanyName ?? "BakuTech")),
+            "url": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(siteUrl))
+        @if (!string.IsNullOrWhiteSpace(setting?.Logo))
+        {
+            <text>,
+                "logo": @Html.Raw(System.Text.Json.JsonSerializer.Serialize($"{siteUrl}{Url.Content(setting.Logo)}"))</text>
+        }
+        @if (!string.IsNullOrWhiteSpace(setting?.Email))
+        {
+            <text>,
+                "email": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(setting.Email))</text>
+        }
+        @if (!string.IsNullOrWhiteSpace(setting?.Phone1))
+        {
+            <text>,
+                "telephone": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(setting.Phone1))</text>
+        }
+        @if (!string.IsNullOrWhiteSpace(address))
+        {
+            <text>,
+                "address": {
+                    "@@type": "PostalAddress",
+                    "streetAddress": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(address))
+                }</text>
+        }
         }
     </script>
 
@@ -700,7 +744,10 @@
 
                                         <input type="hidden"
                                                name="returnUrl"
-                                               value="@Context.Request.Path@Context.Request.QueryString" />
+                                               value="@(ViewData["FaqAzUrl"]?.ToString()
+    ?? ViewData["ProductAzUrl"]?.ToString()
+    ?? ViewData["CategoryAzUrl"]?.ToString()
+    ?? Context.Request.Path + Context.Request.QueryString)" />
 
                                         <button type="submit"
                                                 class="btn-block language-select @(culture == "az" ? "active-item" : "")">
@@ -731,7 +778,10 @@
 
                                         <input type="hidden"
                                                name="returnUrl"
-                                               value="@Context.Request.Path@Context.Request.QueryString" />
+                                               value="@(ViewData["FaqRuUrl"]?.ToString()
+    ?? ViewData["ProductRuUrl"]?.ToString()
+    ?? ViewData["CategoryRuUrl"]?.ToString()
+    ?? Context.Request.Path + Context.Request.QueryString)" />
 
                                         <button type="submit"
                                                 class="btn-block language-select @(culture == "ru" ? "active-item" : "")">
@@ -762,7 +812,10 @@
 
                                         <input type="hidden"
                                                name="returnUrl"
-                                               value="@Context.Request.Path@Context.Request.QueryString" />
+                                               value="@(ViewData["FaqEnUrl"]?.ToString()
+    ?? ViewData["ProductEnUrl"]?.ToString()
+    ?? ViewData["CategoryEnUrl"]?.ToString()
+    ?? Context.Request.Path + Context.Request.QueryString)" />
 
                                         <button type="submit"
                                                 class="btn-block language-select @(culture == "en" ? "active-item" : "")">
@@ -902,12 +955,7 @@
     <script async src="catalog/view/theme/oct_remarket/js/oct-fonts.js"></script>
     <link rel="stylesheet" href="catalog/view/theme/oct_remarket/stylesheet/all.css" media="print" onload="this.media='all'">
     <!-- CustomCode footer code -->
-    <!-- Google Tag Manager (noscript) -->
    
-    <!-- End Google Tag Manager (noscript) -->
-
-
-
 
     <script>
 

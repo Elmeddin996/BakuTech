@@ -28,8 +28,37 @@
         _ => Model.BrandNameAz
     };
 
+    var seoTitle = currentCulture switch
+    {
+        "en" => Model.SeoTitleEn,
+        "ru" => Model.SeoTitleRu,
+        _ => Model.SeoTitleAz
+    };
 
-    ViewData["Title"] = productName;
+    var seoDescription = currentCulture switch
+    {
+        "en" => Model.SeoDescriptionEn,
+        "ru" => Model.SeoDescriptionRu,
+        _ => Model.SeoDescriptionAz
+    };
+
+    var seoKeywords = currentCulture switch
+    {
+        "en" => Model.SeoKeywordsEn,
+        "ru" => Model.SeoKeywordsRu,
+        _ => Model.SeoKeywordsAz
+    };
+
+    ViewData["Title"] = string.IsNullOrWhiteSpace(seoTitle)
+        ? productName
+        : seoTitle;
+
+    ViewData["Description"] = string.IsNullOrWhiteSpace(seoDescription)
+        ? productDescription
+        : seoDescription;
+
+    ViewData["Keywords"] = seoKeywords;
+
     var images = Model.Images
         .OrderBy(x => x.DisplayOrder)
         .ToList();
@@ -38,7 +67,95 @@
         ?? images.FirstOrDefault();
 
     var imageUrl = mainImage?.Image ?? "/images/no-image.png";
+
+    var productAzUrl =
+    $"{Context.Request.Scheme}://{Context.Request.Host}/Product/{Model.SlugAz}";
+
+    var productEnUrl =
+        $"{Context.Request.Scheme}://{Context.Request.Host}/Product/{Model.SlugEn}";
+
+    var productRuUrl =
+        $"{Context.Request.Scheme}://{Context.Request.Host}/Product/{Model.SlugRu}";
+
+    var productUrl =
+        $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+
+    ViewData["ProductAzUrl"] = $"/Product/{Model.SlugAz}";
+    ViewData["ProductEnUrl"] = $"/Product/{Model.SlugEn}";
+    ViewData["ProductRuUrl"] = $"/Product/{Model.SlugRu}";
+
 }
+
+@section Head
+{
+    <link rel="alternate" hreflang="az" href="@productAzUrl" />
+    <link rel="alternate" hreflang="en" href="@productEnUrl" />
+    <link rel="alternate" hreflang="ru" href="@productRuUrl" />
+    <link rel="alternate" hreflang="x-default" href="@productAzUrl" />
+}
+
+<script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+            "@@type": "Product",
+    "name": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productName))",
+        "description": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productDescription ?? string.Empty))",
+        "sku": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Code))",
+    @if (!string.IsNullOrWhiteSpace(Model.Model))
+    {
+        <text>"model": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Model.Trim())),</text>
+    }
+            "brand": {
+        "@@type": "Brand",
+        "name": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(brandName))"
+    },
+    "url": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productUrl))",
+            "image": [
+    @foreach (var image in images)
+    {
+        var absoluteImageUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Url.Content(image.Image)}";
+
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(absoluteImageUrl))
+
+        if (image != images.Last())
+        {
+            @:,
+        }
+    }
+    ],
+        "offers": {
+            "@@type": "Offer",
+            "url": "@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path",
+            "priceCurrency": "AZN",
+            "price": "@Model.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            "availability": "https://schema.org/@(Model.StockQuantity > 0 ? "InStock" : "OutOfStock")",
+            "itemCondition": "https://schema.org/NewCondition"
+        }
+    }
+</script>
+
+<script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@@type": "ListItem",
+                "position": 1,
+                "name": "BakuTech",
+                "item": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        $"{Context.Request.Scheme}://{Context.Request.Host}"
+                ))"
+            },
+            {
+                "@@type": "ListItem",
+                "position": 2,
+                "name": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productName))",
+                "item": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productUrl))"
+            }
+        ]
+    }
+</script>
 
 <link rel="stylesheet"
       href="~/css/product-detail.css"
