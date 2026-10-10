@@ -14,21 +14,43 @@
         .ToList();
 }
 
+<style>
+    
+/* Desktop: mövcud görünüşü saxla */
+#logo img.bakutech-logo {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Mobile: yalnız loqonu böyüt */
+
+    @@media (max-width: 767.98px) {
+        header #logo img.bakutech-logo {
+            width: 200px !important;
+            height: auto !important;
+            max-width: none !important;
+            max-height: none !important;
+            object-fit: contain !important;
+        }
+    }
+
+
+</style>
 
 <header>
     <div class="container-fluid container-sm">
         <div class="row align-items-center flex-column flex-md-row">
-            <div class="col-md-3 col-lg-2 order-0">
+            <div class="col-md-3 col-lg-2 order-0" style="padding:0;">
                 <div id="logo" class="d-flex align-items-center justify-content-center">
 
                     <a asp-controller="Home" asp-action="Index">
+
                         <img src="@(string.IsNullOrWhiteSpace(Model.Setting?.Logo)
-                             ? Url.Content("~/images/logo.png")
-                             : Model.Setting?.Logo)"
+     ? Url.Content("~/images/logo.png")
+     : Model.Setting?.Logo)"
                              alt="@(Model.Setting?.CompanyName ?? "BakuTech")"
-                             class="img-fluid"
-                             width="141"
-                             height="64" />
+                             class="img-fluid bakutech-logo" />
+
                     </a>
 
                 </div>

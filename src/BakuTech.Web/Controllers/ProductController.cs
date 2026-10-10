@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using BakuTech.Business.Abstractions.Services;
 
@@ -6,10 +7,14 @@ namespace BakuTech.Web.Controllers;
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
+    private readonly ICategoryService _categoryService;
 
-    public ProductController(IProductService productService)
+    public ProductController(
+        IProductService productService,
+        ICategoryService categoryService)
     {
         _productService = productService;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
@@ -22,6 +27,9 @@ public class ProductController : Controller
 
         if (product == null)
             return NotFound();
+
+        ViewData["Category"] =
+            await _categoryService.GetByIdAsync(product.CategoryId);
 
         return View(product);
     }

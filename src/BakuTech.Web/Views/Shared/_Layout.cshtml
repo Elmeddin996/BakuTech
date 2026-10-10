@@ -112,7 +112,10 @@
 
     @if (!string.IsNullOrWhiteSpace(setting?.Logo))
     {
-        <meta property="og:image" content="@setting.Logo" />
+        var absoluteLogoUrl =
+        $"{Context.Request.Scheme}://{Context.Request.Host}{Url.Content(setting.Logo)}";
+
+        <meta property="og:image" content="@absoluteLogoUrl" />
     }
 
     <!-- Favicon -->

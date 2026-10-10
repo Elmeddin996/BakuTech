@@ -2,9 +2,40 @@
 
 @using System.Globalization
 @using BakuTech.Web.Services
+@using BakuTech.Business.DTOs.Categories
+
 @inject LocService localizer
 
 @{
+
+    
+    var category = ViewData["Category"] as CategoryDetailDto;
+
+    var culture = System.Globalization
+        .CultureInfo.CurrentUICulture
+        .TwoLetterISOLanguageName;
+
+    culture = culture is "en" or "ru" ? culture : "az";
+
+    var categoryName = culture switch
+    {
+        "en" => category?.NameEn,
+        "ru" => category?.NameRu,
+        _ => category?.NameAz
+    };
+
+    var categorySlug = culture switch
+    {
+        "en" => category?.SlugEn,
+        "ru" => category?.SlugRu,
+        _ => category?.SlugAz
+    };
+
+    var categoryUrl = !string.IsNullOrWhiteSpace(categorySlug)
+        ? $"/{culture}/{categorySlug}"
+        : null;
+
+
     var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
     var productName = currentCulture switch
@@ -94,72 +125,100 @@
     <link rel="alternate" hreflang="x-default" href="@productAzUrl" />
 }
 
+
 <script type="application/ld+json">
     {
         "@@context": "https://schema.org",
-            "@@type": "Product",
-    "name": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productName))",
-        "description": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productDescription ?? string.Empty))",
-        "sku": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Code))",
+        "@@type": "Product",
+        "name": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(productName ?? string.Empty)),
+        "description": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(productDescription ?? string.Empty)),
+        "sku": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Code ?? string.Empty)),
     @if (!string.IsNullOrWhiteSpace(Model.Model))
     {
         <text>"model": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Model.Trim())),</text>
     }
-            "brand": {
-        "@@type": "Brand",
-        "name": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(brandName))"
-    },
-    "url": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productUrl))",
-            "image": [
+        "brand": {
+            "@@type": "Brand",
+            "name": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(brandName ?? string.Empty))
+        },
+        "url": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(productUrl)),
+        "image": [
     @foreach (var image in images)
     {
         var absoluteImageUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Url.Content(image.Image)}";
-
         @Html.Raw(System.Text.Json.JsonSerializer.Serialize(absoluteImageUrl))
-
         if (image != images.Last())
         {
             @:,
         }
     }
-    ],
+        ],
         "offers": {
             "@@type": "Offer",
-            "url": "@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path",
+            "url": @Html.Raw(System.Text.Json.JsonSerializer.Serialize(productUrl)),
             "priceCurrency": "AZN",
-            "price": "@Model.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)",
+            "price": @Model.Price.ToString(System.Globalization.CultureInfo.InvariantCulture),
             "availability": "https://schema.org/@(Model.StockQuantity > 0 ? "InStock" : "OutOfStock")",
             "itemCondition": "https://schema.org/NewCondition"
         }
     }
 </script>
 
-<script type="application/ld+json">
+
+
+
+@{
+    var breadcrumbItems = new List<Dictionary<string, object>>
     {
-        "@@context": "https://schema.org",
-        "@@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@@type": "ListItem",
-                "position": 1,
-                "name": "BakuTech",
-                "item": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-        $"{Context.Request.Scheme}://{Context.Request.Host}"
-                ))"
-            },
-            {
-                "@@type": "ListItem",
-                "position": 2,
-                "name": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productName))",
-                "item": "@Html.Raw(System.Text.Json.JsonSerializer.Serialize(productUrl))"
-            }
-        ]
+        new()
+        {
+            ["@type"] = "ListItem",
+            ["position"] = 1,
+            ["name"] = "BakuTech",
+            ["item"] = $"{Context.Request.Scheme}://{Context.Request.Host}"
+        }
+    };
+
+    if (category != null && !string.IsNullOrWhiteSpace(categoryUrl))
+    {
+        breadcrumbItems.Add(new()
+                {
+                    ["@type"] = "ListItem",
+                    ["position"] = 2,
+                    ["name"] = categoryName ?? string.Empty,
+                    ["item"] = $"{Context.Request.Scheme}://{Context.Request.Host}{categoryUrl}"
+                });
     }
+
+    breadcrumbItems.Add(new()
+            {
+                ["@type"] = "ListItem",
+                ["position"] = breadcrumbItems.Count + 1,
+                ["name"] = productName ?? string.Empty,
+                ["item"] = productUrl
+            });
+
+    var breadcrumbJson = System.Text.Json.JsonSerializer.Serialize(
+        new Dictionary<string, object>
+                {
+                    ["@context"] = "https://schema.org",
+                    ["@type"] = "BreadcrumbList",
+                    ["itemListElement"] = breadcrumbItems
+                }
+    );
+}
+
+<script type="application/ld+json">
+    @Html.Raw(breadcrumbJson)
 </script>
+
+
+
 
 <link rel="stylesheet"
       href="~/css/product-detail.css"
       asp-append-version="true" />
+
 
 <div id="product-product" class="container">
     <nav aria-label="breadcrumb">
@@ -171,12 +230,20 @@
                 </a>
             </li>
 
+            @if (category != null && !string.IsNullOrWhiteSpace(categoryUrl))
+            {
+                <li class="breadcrumb-item rm-breadcrumb-item">
+                    <a href="@categoryUrl">@categoryName</a>
+                </li>
+            }
+
             <li class="breadcrumb-item rm-breadcrumb-item">
                 @productName
             </li>
 
         </ul>
     </nav>
+
 
     
     <div class="rm-product-mobile-fixed fixed-bottom d-lg-none d-flex align-items-center justify-content-between w-100" style="">
