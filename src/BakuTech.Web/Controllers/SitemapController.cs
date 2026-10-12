@@ -23,7 +23,7 @@ public class SitemapController : Controller
     [HttpGet("/sitemap.xml")]
     public async Task<IActionResult> Index()
     {
-        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        const string baseUrl = "https://bakutech.az";
 
         var categories = await _categoryService.GetAllAsync();
         var products = await _productService.GetAllAsync();
