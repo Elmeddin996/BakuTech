@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="az">
 <head>
@@ -8,14 +9,74 @@
 
     @await Html.PartialAsync("_Styles")
 </head>
+
+<style>
+    
+/* Desktop */
+.admin-layout {
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    flex: 0 0 250px;
+    width: 250px;
+    min-height: 100vh;
+}
+
+.admin-main {
+    min-width: 0;
+}
+
+.admin-content {
+    min-width: 0;
+}
+
+/* Mobile and tablet */
+@@media (max-width: 991.98px) {
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1050;
+        width: 280px;
+        max-width: 85vw;
+        min-height: 100vh;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+
+    body.admin-sidebar-open .admin-sidebar {
+        transform: translateX(0);
+    }
+
+    .admin-sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1040;
+        background: rgba(0, 0, 0, 0.45);
+    }
+
+    body.admin-sidebar-open .admin-sidebar-overlay {
+        display: block;
+    }
+
+    .admin-content {
+        padding: 1rem !important;
+    }
+}
+
+</style>
 <body>
-    <div class="d-flex">
+    <div class="admin-layout d-flex">
         @await Html.PartialAsync("_Sidebar")
 
-        <div class="d-flex flex-column flex-fill">
+        <div class="admin-main d-flex flex-column flex-fill">
             @await Html.PartialAsync("_Navbar")
 
-            <main class="flex-fill p-4">
+            <main class="flex-fill admin-content p-4">
                 @RenderBody()
             </main>
 
@@ -23,8 +84,37 @@
         </div>
     </div>
 
+    <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
     @await Html.PartialAsync("_Scripts")
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggle = document.getElementById("adminSidebarToggle");
+            const overlay = document.getElementById("adminSidebarOverlay");
+
+            if (!toggle || !overlay) return;
+
+            function closeSidebar() {
+                document.body.classList.remove("admin-sidebar-open");
+                toggle.setAttribute("aria-expanded", "false");
+            }
+
+            toggle.addEventListener("click", function () {
+                const isOpen = document.body.classList.toggle("admin-sidebar-open");
+                toggle.setAttribute("aria-expanded", String(isOpen));
+            });
+
+            overlay.addEventListener("click", closeSidebar);
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") closeSidebar();
+            });
+        });
+
+    </script>
 </body>
 </html>

@@ -1,8 +1,20 @@
-<nav class="navbar navbar-light bg-white border-bottom px-4 py-2">
 
-    <span class="navbar-brand mb-0 h4">
-        @(ViewData["Title"] ?? "Dashboard")
-    </span>
+<nav class="navbar navbar-light bg-white border-bottom px-3 px-md-4 py-2">
+
+    <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-secondary d-lg-none"
+                id="adminSidebarToggle"
+                type="button"
+                aria-label="Menyunu aç"
+                aria-controls="adminSidebar"
+                aria-expanded="false">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+
+        <span class="navbar-brand mb-0 h5">
+            @(ViewData["Title"] ?? "Dashboard")
+        </span>
+    </div>
 
     <div class="dropdown">
         <button class="btn btn-outline-secondary dropdown-toggle"
@@ -10,31 +22,24 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
             <i class="bi bi-person-circle me-1"></i>
-            Admin
+            <span class="d-none d-sm-inline">Admin</span>
         </button>
 
         <ul class="dropdown-menu dropdown-menu-end">
-
             <li>
                 <hr class="dropdown-divider" />
             </li>
-
             <li>
                 <form asp-area="Admin"
                       asp-controller="Account"
                       asp-action="Logout"
                       method="post">
-
                     @Html.AntiForgeryToken()
-
-                    <button type="submit"
-                            class="dropdown-item">
+                    <button type="submit" class="dropdown-item">
                         Logout
                     </button>
-
                 </form>
             </li>
-
         </ul>
     </div>
 
