@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using BakuTech.Web.Models;
@@ -18,7 +19,10 @@ public class FileService : IFileService
         _settings = options.Value;
     }
 
-    public async Task<FileUploadResult> UploadAsync(IFormFile? file, string folderName)
+    public async Task<FileUploadResult> UploadAsync(
+        IFormFile? file,
+        string folderName,
+        string? fileName = null)
     {
         if (file == null || file.Length == 0)
         {
@@ -51,9 +55,11 @@ public class FileService : IFileService
             Directory.CreateDirectory(uploadsPath);
         }
 
-        var fileName = $"{Guid.NewGuid()}{extension}";
+        var finalFileName = string.IsNullOrWhiteSpace(fileName)
+            ? $"{Guid.NewGuid()}{extension}"
+            : $"{Path.GetFileNameWithoutExtension(fileName)}{extension}";
 
-        var filePath = Path.Combine(uploadsPath, fileName);
+        var filePath = Path.Combine(uploadsPath, finalFileName);
 
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
@@ -61,7 +67,7 @@ public class FileService : IFileService
         }
 
         return FileUploadResult.Successful(
-            $"/uploads/{folderName}/{fileName}");
+            $"/uploads/{folderName}/{finalFileName}");
     }
 
     public Task DeleteAsync(string? filePath)

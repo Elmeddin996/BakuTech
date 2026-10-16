@@ -312,24 +312,69 @@ public class ProductController : BaseAdminController
         });
     }
 
+
+
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UploadImage(UploadProductImageViewModel model)
     {
-
         if (!ModelState.IsValid)
         {
             TempData["Error"] = "Please select an image.";
-
             return RedirectToAction(nameof(Edit), new { id = model.ProductId });
         }
 
-        var uploadResult = await _fileService.UploadAsync(model.Image, "products");
+        var product = await _productService.GetByIdAsync(model.ProductId);
+
+        if (product is null)
+        {
+            TempData["Error"] = "Product not found.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        var imageName = $"{product.NameAz}-{product.Code}".ToLowerInvariant();
+
+        var normalized = imageName
+            .Replace("ı", "i")
+            .Normalize(System.Text.NormalizationForm.FormD);
+
+        var slugBuilder = new System.Text.StringBuilder();
+        var previousWasSeparator = false;
+
+        foreach (var c in normalized)
+        {
+            var category = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+
+            if (category == System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                continue;
+            }
+
+            if (char.IsLetterOrDigit(c))
+            {
+                slugBuilder.Append(c);
+                previousWasSeparator = false;
+            }
+            else if (!previousWasSeparator && slugBuilder.Length > 0)
+            {
+                slugBuilder.Append('-');
+                previousWasSeparator = true;
+            }
+        }
+
+        var slug = slugBuilder.ToString().Trim('-');
+
+        var fileName = $"{slug}-{Guid.NewGuid().ToString("N")[..8]}";
+
+        var uploadResult = await _fileService.UploadAsync(
+            model.Image,
+            "products",
+            fileName);
 
         if (!uploadResult.Success)
         {
             TempData["Error"] = uploadResult.ErrorMessage;
-
             return RedirectToAction(nameof(Edit), new { id = model.ProductId });
         }
 
@@ -345,6 +390,7 @@ public class ProductController : BaseAdminController
 
         return RedirectToAction(nameof(Edit), new { id = model.ProductId });
     }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
