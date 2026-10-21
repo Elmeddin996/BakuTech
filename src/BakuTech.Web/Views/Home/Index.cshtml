@@ -489,6 +489,30 @@
         }
 
 
+
+
+
+    @if (Model.PopularProducts.Any())
+    {
+        <section class="BakuTech-new-products">
+            <div class="row row-padding-top">
+                <div class="col-12 rm-module-header">
+                    <span>
+                        @localizer.GetLocalizedHtmlString("PopularProducts")
+                    </span>
+                </div>
+            </div>
+
+            <div class="row no-gutters">
+                @foreach (var product in Model.PopularProducts)
+                {
+                    <partial name="_ProductCardGrid" model="product" />
+                }
+            </div>
+        </section>
+    }
+
+
         @if (!string.IsNullOrWhiteSpace(Model.YoutubeVideo1) ||
         !string.IsNullOrWhiteSpace(Model.YoutubeVideo2))
         {

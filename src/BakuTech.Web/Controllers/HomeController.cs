@@ -49,7 +49,8 @@ public class HomeController : Controller
             .ThenBy(x => x.NameAz)
             .ToList();
 
-        var newProducts = await _productService.GetNewProductsAsync(9);
+        var newProducts = await _productService.GetNewProductsAsync(12);
+        var popularProducts = await _productService.GetPopularProductsAsync(12);
 
         var setting = await _settingService.GetAsync();
 
@@ -59,7 +60,8 @@ public class HomeController : Controller
             MiniSliders = miniSliders,
             MobileSliders = mobileSliders,
             Categories = categories,
-            NewProducts = newProducts.Take(9).ToList(),
+            NewProducts = newProducts.Take(12).ToList(),
+            PopularProducts = popularProducts,
 
             YoutubeVideo1 = setting?.YoutubeVideo1,
             YoutubeVideo2 = setting?.YoutubeVideo2

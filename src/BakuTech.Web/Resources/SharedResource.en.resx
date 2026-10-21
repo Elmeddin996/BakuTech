@@ -399,4 +399,7 @@
   <data name="Stock" xml:space="preserve">
     <value>Stock</value>
   </data>
+  <data name="PopularProducts" xml:space="preserve">
+    <value>Popular Products</value>
+  </data>
 </root>

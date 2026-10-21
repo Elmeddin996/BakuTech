@@ -35,4 +35,6 @@ public interface IProductService
 
     Task<List<ProductListDto>> GetNewProductsAsync(int count);
 
+    Task<List<ProductListDto>> GetPopularProductsAsync(int count);
+
 }

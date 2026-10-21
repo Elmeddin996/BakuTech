@@ -26,4 +26,6 @@ public interface IProductRepository : IGenericRepository<Product>
         IReadOnlyCollection<int> categoryIds);
 
     Task<List<Product>> GetNewProductsAsync(int count);
+
+    Task<List<Product>> GetPopularProductsAsync(int count);
 }

@@ -3,6 +3,7 @@ using BakuTech.Business;
 using BakuTech.Data;
 using BakuTech.Web.Services;
 using BakuTech.Web.Settings;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,13 @@ builder.Services.Configure<FileSettings>(
     builder.Configuration.GetSection("FileSettings"));
 
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto
+});
 
 var supportedCultures = new[]
 {

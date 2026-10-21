@@ -399,4 +399,7 @@
   <data name="Stock" xml:space="preserve">
     <value>Наличие</value>
   </data>
+  <data name="PopularProducts" xml:space="preserve">
+    <value>Популярные товары</value>
+  </data>
 </root>

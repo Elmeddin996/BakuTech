@@ -182,4 +182,12 @@ public class ProductService : IProductService
 
         return _mapper.Map<List<ProductListDto>>(products);
     }
+
+
+    public async Task<List<ProductListDto>> GetPopularProductsAsync(int count)
+    {
+        var products = await _unitOfWork.Products.GetPopularProductsAsync(count);
+
+        return _mapper.Map<List<ProductListDto>>(products);
+    }
 }

@@ -262,4 +262,21 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
             .Take(count)
             .ToListAsync();
     }
+
+
+    public async Task<List<Product>> GetPopularProductsAsync(int count)
+    {
+        return await DbSet
+            .AsNoTracking()
+            .Include(x => x.Category)
+            .Include(x => x.Brand)
+            .Include(x => x.ProductImages)
+            .Where(x =>
+                x.IsFeatured &&
+                x.IsActive &&
+                !x.IsDeleted)
+            .OrderByDescending(x => x.CreatedDate)
+            .Take(count)
+            .ToListAsync();
+    }
 }
